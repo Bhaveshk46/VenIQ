@@ -10,6 +10,7 @@ steps:
       '--build-arg', 'VITE_GOOGLE_MAPS_API_KEY=$_VITE_GOOGLE_MAPS_API_KEY',
       '--build-arg', 'VITE_GOOGLE_DIRECTIONS_API_KEY=$_VITE_GOOGLE_DIRECTIONS_API_KEY',
       '--build-arg', 'VITE_GOOGLE_GEOCODING_API_KEY=$_VITE_GOOGLE_GEOCODING_API_KEY',
+      '--build-arg', 'VITE_FIREBASE_AUTH_DOMAIN=$_VITE_FIREBASE_AUTH_DOMAIN',
       '-t', '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA',
       '.'
     ]
@@ -74,6 +75,7 @@ substitutions:
   _AR_HOSTNAME: 'asia-south2-docker.pkg.dev'
   _AR_PROJECT_ID: 'veniq-c5b69'
   _AR_REPOSITORY: 'stadium-iq'
+  _VITE_FIREBASE_AUTH_DOMAIN: 'veniq-792113099008.asia-south2.run.app'
   _PLATFORM: 'managed'
 
 options:
