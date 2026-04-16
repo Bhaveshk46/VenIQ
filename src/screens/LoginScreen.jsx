@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { auth, googleProvider } from '../../services/firebase';
-import { signInWithPopup, signInWithRedirect } from 'firebase/auth';
+import { auth, googleProvider, signInWithPopup, signInWithRedirect } from '../../services/firebase';
 import VenIQLogo from '../components/VenIQLogo';
 
 const GoogleIcon = () => (

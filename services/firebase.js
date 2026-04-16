@@ -10,12 +10,13 @@ import {
   isSignInWithEmailLink,
   signInWithEmailLink,
   setPersistence,
-  browserLocalPersistence
+  browserLocalPersistence,
+  signInWithRedirect
 } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_PROJECT_ID ? `${import.meta.env.VITE_FIREBASE_PROJECT_ID}.firebaseapp.com` : undefined,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
 };
@@ -74,5 +75,6 @@ export {
   isSignInWithEmailLink, 
   signInWithEmailLink,
   setPersistence,
-  browserLocalPersistence
+  browserLocalPersistence,
+  signInWithRedirect
 };
