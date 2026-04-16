@@ -22,20 +22,16 @@ export function AuthProvider({ children }) {
     // This allows the app to know "a login is pending" and stay on loading
     const initAuth = async () => {
       try {
-        // Wait for potential redirect result
+        // Wait for redirect result FIRST (critical for mobile)
         const result = await getRedirectResult(auth);
         if (result?.user) {
-          console.log("Logged in via redirect:", result.user.email);
+          console.log("✅ Mobile redirect login successful:", result.user.email);
           setUser(result.user);
         }
       } catch (e) {
-        console.error("Redirect login error:", e);
-        // Explicitly handle common redirect errors
-        if (e.code === 'auth/account-exists-with-different-credential') {
-          alert("An account already exists with the same email address but different sign-in credentials.");
-        }
+        console.error("❌ Redirect login error:", e);
       } finally {
-        // Only after redirect check, start the observer
+        // Standard observer to catch persistence or logout
         const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
           setUser(firebaseUser);
           setLoading(false);

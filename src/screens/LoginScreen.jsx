@@ -64,6 +64,18 @@ export default function LoginScreen() {
     }
   };
 
+  if (loading) {
+    return (
+      <div style={{
+        height: '100vh', width: '100vw', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: '#080c14', flexDirection: 'column', gap: '20px'
+      }}>
+        <VenIQLogo size={60} className="floating-logo" />
+        <div style={{ color: '#64748b', fontFamily: 'Outfit, sans-serif' }}>Securing Session...</div>
+      </div>
+    );
+  }
+
   return (
     <div style={{
       height: '100vh', width: '100vw', display: 'flex', alignItems: 'center', justifyContent: 'center',

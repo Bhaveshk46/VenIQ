@@ -12,6 +12,7 @@ import { getDatabase, ref, set, push } from 'firebase/database';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import http from 'http';
 
 // ─── Load Environment Variables (Process.env or .env) ──────────────
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -119,6 +120,16 @@ async function tick() {
     console.error('❌ Firebase write failed:', err.message);
   }
 }
+
+// ─── Cloud Run Health Check Server ─────────────────────────────────────────────
+// Cloud Run requires the container to listen on a port (8080) to stay active.
+const PORT = process.env.PORT || 8080;
+http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('VenIQ Worker is Healthy\n');
+}).listen(PORT, () => {
+  console.log(`📡 Health check server listening on port ${PORT}`);
+});
 
 // Run immediately on start, then every 30 seconds
 tick();
