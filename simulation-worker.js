@@ -13,19 +13,22 @@ import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
-// ─── Load .env manually (no Vite here) ────────────────────────────────────────
+// ─── Load Environment Variables (Process.env or .env) ──────────────
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const envPath = join(__dirname, '.env');
-const envVars = {};
+const envVars = { ...process.env }; // Start with system-level variables
+
 try {
   const raw = readFileSync(envPath, 'utf8');
   raw.split('\n').forEach(line => {
     const [key, ...rest] = line.split('=');
-    if (key && rest.length) envVars[key.trim()] = rest.join('=').trim();
+    if (key && rest.length) {
+      const k = key.trim();
+      if (!envVars[k]) envVars[k] = rest.join('=').trim();
+    }
   });
 } catch {
-  console.error('❌ Could not read .env. Make sure it exists.');
-  process.exit(1);
+  console.log('ℹ️ No .env file found. Relying on system environment variables.');
 }
 
 // ─── Firebase Config ───────────────────────────────────────────────────────────

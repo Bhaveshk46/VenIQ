@@ -34,6 +34,10 @@ steps:
     args: [
       'build',
       '-f', 'Dockerfile.backend',
+      '--build-arg', 'VITE_GEMINI_API_KEY=$_VITE_GEMINI_API_KEY',
+      '--build-arg', 'VITE_FIREBASE_API_KEY=$_VITE_FIREBASE_API_KEY',
+      '--build-arg', 'VITE_FIREBASE_DATABASE_URL=$_VITE_FIREBASE_DATABASE_URL',
+      '--build-arg', 'VITE_FIREBASE_PROJECT_ID=$_VITE_FIREBASE_PROJECT_ID',
       '-t', '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$_WORKER_SERVICE_NAME:$COMMIT_SHA',
       '.'
     ]
