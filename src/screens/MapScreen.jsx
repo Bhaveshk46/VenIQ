@@ -127,7 +127,7 @@ export default function MapScreen() {
   }, [activeFilter, crowdLevels]);
 
   return (
-    <div style={{ position: 'relative', height: '100%', width: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', userSelect: 'none' }} className="animate-fade-in">
+    <div style={{ position: 'relative', height: '100%', width: '100%', display: 'flex', flexDirection: 'column', overflowY: 'auto', overflowX: 'hidden', userSelect: 'none' }} className="animate-fade-in">
       
       {/* Header */}
       <div style={{ margin: 'calc(env(safe-area-inset-top, 0px) + 4px) 12px 0 12px', zIndex: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'rgba(17, 24, 39, 0.9)', backdropFilter: 'blur(15px)', borderRadius: '14px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>

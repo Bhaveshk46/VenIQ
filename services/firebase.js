@@ -33,8 +33,6 @@ if (firebaseConfig.apiKey && firebaseConfig.projectId && !isPlaceholder(firebase
     firebaseAuth = getAuth(firebaseApp);
     firebaseDb = getDatabase(firebaseApp);
     
-    // Set persistence (async, fire-and-forget)
-    setPersistence(firebaseAuth, browserLocalPersistence).catch(err => console.error("Firebase persistence error:", err));
     console.log("Firebase services initialized successfully");
   } catch (error) {
     console.error("Firebase initialization failed:", error);
@@ -61,4 +59,20 @@ export const matchRef = db ? ref(db, 'match') : null;
 export const feedRef = db ? ref(db, 'feed') : null;
 
 export const googleProvider = new GoogleAuthProvider();
-export { set, ref, get, onValue, push, signOut, onAuthStateChanged, signInWithPopup, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink };
+googleProvider.setCustomParameters({ prompt: 'select_account' });
+
+export { 
+  set, 
+  ref, 
+  get, 
+  onValue, 
+  push, 
+  signOut, 
+  onAuthStateChanged, 
+  signInWithPopup, 
+  sendSignInLinkToEmail, 
+  isSignInWithEmailLink, 
+  signInWithEmailLink,
+  setPersistence,
+  browserLocalPersistence
+};
