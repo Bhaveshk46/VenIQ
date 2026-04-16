@@ -28,6 +28,15 @@ ENV VITE_GOOGLE_GEOCODING_API_KEY=$VITE_GOOGLE_GEOCODING_API_KEY
 # Copy the rest of the application code
 COPY . .
 
+# Explicitly create .env.production using build args to ensure Vite bakes them in
+RUN echo "VITE_GEMINI_API_KEY=$VITE_GEMINI_API_KEY" > .env.production && \
+    echo "VITE_FIREBASE_API_KEY=$VITE_FIREBASE_API_KEY" >> .env.production && \
+    echo "VITE_FIREBASE_DATABASE_URL=$VITE_FIREBASE_DATABASE_URL" >> .env.production && \
+    echo "VITE_FIREBASE_PROJECT_ID=$VITE_FIREBASE_PROJECT_ID" >> .env.production && \
+    echo "VITE_GOOGLE_MAPS_API_KEY=$VITE_GOOGLE_MAPS_API_KEY" >> .env.production && \
+    echo "VITE_GOOGLE_DIRECTIONS_API_KEY=$VITE_GOOGLE_DIRECTIONS_API_KEY" >> .env.production && \
+    echo "VITE_GOOGLE_GEOCODING_API_KEY=$VITE_GOOGLE_GEOCODING_API_KEY" >> .env.production
+
 # Build the app - Vite will bake the ENV variables into the static bundle
 RUN npm run build
 
