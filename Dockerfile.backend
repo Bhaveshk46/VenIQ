@@ -1,0 +1,20 @@
+# Use a lightweight Node.js image
+FROM node:20-slim
+
+WORKDIR /app
+
+# Copy package files and install dependencies
+COPY package*.json ./
+RUN npm install --production
+
+# Copy the simulation worker and necessary utils
+COPY simulation-worker.js ./
+COPY utils/ ./utils/
+COPY .env ./
+
+# The worker doesn't need to expose a port as it's a background sync script,
+# but Cloud Run expects a port. We'll satisfy this requirement.
+EXPOSE 8080
+
+# Run the simulation worker
+CMD ["node", "simulation-worker.js"]

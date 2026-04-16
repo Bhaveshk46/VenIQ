@@ -1,0 +1,341 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap');
+
+:root {
+  --bg-dark: #080c14;
+  --bg-panel: rgba(255, 255, 255, 0.03);
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --primary: #7f77dd;
+  --primary-glow: rgba(127, 119, 221, 0.3);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  
+  --safe-bottom: 80px; /* Space for bottom nav */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  height: 100dvh; /* Dynamic viewport height — accounts for mobile browser chrome */
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: var(--bg-dark);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none; /* Mobile app feel view */
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: var(--bg-panel);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+}
+
+/* Mobile Layout */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh; /* dvh correctly excludes mobile browser chrome */
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+.screen-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Allow scroll on all screen sizes */
+  overflow-x: hidden;
+  position: relative;
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* Momentum scroll on iOS */
+  /* FIX: Ensure we can scroll past the bottom nav */
+  padding-bottom: calc(65px + max(env(safe-area-inset-bottom), 8px));
+}
+
+/* On mobile, same behavior */
+@media (max-width: 639px) {
+  .screen-content {
+    overflow-y: auto;
+  }
+}
+
+/* Custom Scrollbar for sleek look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+/* Titles */
+h1, h2, h3, h4 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+.mobile-scroll-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(127, 119, 221, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(127, 119, 221, 0.3);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  animation: bounceDown 2s infinite ease-in-out;
+  pointer-events: none; /* Pass clicks through */
+  z-index: 50;
+  transition: opacity 0.5s ease;
+}
+
+@media (min-width: 640px) {
+  .mobile-scroll-hint {
+    display: none !important;
+  }
+}
+
+/* Bottom Nav */
+.bottom-nav {
+  height: 65px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: rgba(17, 24, 39, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-glass);
+  /* Safe area for home indicator on iPhone */
+  padding-bottom: max(env(safe-area-inset-bottom), 8px);
+  height: calc(65px + max(env(safe-area-inset-bottom), 8px));
+  flex-shrink: 0;
+  z-index: 100;
+  /* Stick to the very bottom of the screen regardless of scrolling */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+  padding: 8px 16px;
+  border-radius: 12px;
+}
+
+.nav-item.active {
+  color: var(--primary);
+}
+
+.nav-item.active .nav-icon {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 0 8px var(--primary-glow));
+}
+
+.nav-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* Header */
+.screen-header {
+  padding: 24px 20px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: linear-gradient(to bottom, rgba(8,12,20, 1) 40%, rgba(8,12,20, 0) 100%);
+}
+
+.screen-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff 0%, #a39dfa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Mobile Bottom Sheet & Backdrop */
+/* Layout Containers */
+.dual-mode-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0; /* Important for flex-basis in locked heights */
+  position: relative;
+  overflow: hidden;
+}
+
+.map-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+  transition: flex 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  min-height: 0;
+}
+
+.info-section {
+  width: 100%;
+  background: rgba(13, 17, 28, 0.9) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(127, 119, 221, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  min-height: 0;
+}
+
+/* MOBILE (default) */
+@media (max-width: 639px) {
+  .dual-mode-container {
+    height: auto;
+    min-height: 100%;
+    overflow-y: auto;
+  }
+
+  .map-section {
+    min-height: 55vh; /* Balanced for stacking view */
+    flex: none;
+  }
+
+  .info-section {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    flex: none;
+    position: relative;
+    z-index: 10;
+  }
+
+  .info-section.active {
+    max-height: none;
+    opacity: 1;
+    border-top: 1px solid rgba(127, 119, 221, 0.2);
+    padding-bottom: 80px; /* Safe space above bottom nav */
+  }
+}
+
+/* DESKTOP (min-width: 640px) */
+@media (min-width: 640px) {
+  .dual-mode-container {
+    flex-direction: row;
+    gap: 0;
+  }
+
+  .map-section {
+    flex: 1;
+    width: 100%;
+    transition: flex 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* When NO zone selected: map takes full width, info hidden */
+  .map-section {
+    flex: 1;
+  }
+
+  .info-section {
+    width: 0;
+    flex: 0;
+    max-width: 0;
+    opacity: 0;
+    border-left: 1px solid rgba(127, 119, 221, 0.2);
+    border-top: none;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* When zone IS selected: map takes 65%, info takes 35% */
+  .info-section.active {
+    width: 35%;
+    flex: 0 0 35%;
+    max-width: 35%;
+    opacity: 1;
+    overflow-y: auto;
+  }
+}
+
+/* New VenIQ Logo Animation */
+.floating-logo {
+  animation: float-logo 4s ease-in-out infinite;
+}
+
+@keyframes float-logo {
+  0% { transform: translateY(0px); filter: drop-shadow(0px 8px 16px rgba(127, 119, 221, 0.4)); }
+  50% { transform: translateY(-8px); filter: drop-shadow(0px 16px 24px rgba(127, 119, 221, 0.7)); }
+  100% { transform: translateY(0px); filter: drop-shadow(0px 8px 16px rgba(127, 119, 221, 0.4)); }
+}

@@ -1,0 +1,73 @@
+steps:
+  # Build the container image with API keys as build args
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '--build-arg', 'VITE_GEMINI_API_KEY=$_VITE_GEMINI_API_KEY',
+      '--build-arg', 'VITE_FIREBASE_API_KEY=$_VITE_FIREBASE_API_KEY',
+      '--build-arg', 'VITE_FIREBASE_DATABASE_URL=$_VITE_FIREBASE_DATABASE_URL',
+      '--build-arg', 'VITE_FIREBASE_PROJECT_ID=$_VITE_FIREBASE_PROJECT_ID',
+      '-t', '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA',
+      '.'
+    ]
+  
+  # Push the container image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA']
+  
+  # Deploy Frontend to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: [
+      'run', 'deploy', '$_SERVICE_NAME',
+      '--image', '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA',
+      '--region', '$_DEPLOY_REGION',
+      '--platform', '$_PLATFORM',
+      '--allow-unauthenticated'
+    ]
+
+  # Build the Backend Worker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-f', 'Dockerfile.backend',
+      '-t', '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$_WORKER_SERVICE_NAME:$COMMIT_SHA',
+      '.'
+    ]
+
+  # Push the Backend Worker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$_WORKER_SERVICE_NAME:$COMMIT_SHA']
+
+  # Deploy Backend Worker to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: [
+      'run', 'deploy', '$_WORKER_SERVICE_NAME',
+      '--image', '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$_WORKER_SERVICE_NAME:$COMMIT_SHA',
+      '--region', '$_DEPLOY_REGION',
+      '--platform', '$_PLATFORM',
+      '--allow-unauthenticated'
+    ]
+
+images:
+  - '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA'
+
+substitutions:
+  _VITE_GEMINI_API_KEY: 'replace_in_gcp_console'
+  _VITE_FIREBASE_API_KEY: 'replace_in_gcp_console'
+  _VITE_FIREBASE_DATABASE_URL: 'replace_in_gcp_console'
+  _VITE_FIREBASE_PROJECT_ID: 'veniq-c5b69'
+  _VITE_GOOGLE_MAPS_API_KEY: 'replace_in_gcp_console'
+  _VITE_GOOGLE_DIRECTIONS_API_KEY: 'replace_in_gcp_console'
+  _VITE_GOOGLE_GEOCODING_API_KEY: 'replace_in_gcp_console'
+  _SERVICE_NAME: 'veniq-web'
+  _WORKER_SERVICE_NAME: 'veniq-worker'
+  _DEPLOY_REGION: 'asia-south2'
+  _AR_HOSTNAME: 'asia-south2-docker.pkg.dev'
+  _AR_PROJECT_ID: 'veniq-c5b69'
+  _AR_REPOSITORY: 'stadium-iq'
+  _PLATFORM: 'managed'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
