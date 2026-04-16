@@ -20,7 +20,7 @@ const firebaseConfig = {
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
 };
 
-// Initialize Firebase services with descriptive diagnostics to help debug deployment (Vercel/Cloud Run)
+// Initialize Firebase services with descriptive diagnostics to help debug deployment (Cloud Run)
 let firebaseApp = null;
 let firebaseAuth = null;
 let firebaseDb = null;
@@ -48,7 +48,7 @@ if (firebaseConfig.apiKey && firebaseConfig.projectId && !isPlaceholder(firebase
     "VITE_FIREBASE_DATABASE_URL": firebaseConfig.databaseURL ? "Present" : "MISSING",
     "Environment": import.meta.env.MODE
   });
-  console.info("Note: If deploying to Vercel, ensure these are added in Project Settings -> Environment Variables.");
+  console.info("Note: If deploying to Cloud Run, ensure these are added in the Build Triggers variables section.");
   console.groupEnd();
 }
 

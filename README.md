@@ -1,5 +1,7 @@
 # VenIQ — The Mobile-First AI Stadium Concierge 📱🏅
 
+**🌍 Live Demonstration:** [https://veniq-792113099008.asia-south2.run.app](https://veniq-792113099008.asia-south2.run.app)
+
 VenIQ is a premium, real-time stadium navigation and assistance platform designed from the ground up for the mobile fan experience. It leverages **Google Cloud Technologies** (Gemini AI, Firebase, Maps) to provide fans with a high-performance digital companion while they are in the heat of the action.
 
 ---

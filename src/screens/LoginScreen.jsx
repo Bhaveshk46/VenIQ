@@ -20,7 +20,7 @@ export default function LoginScreen() {
     setError('');
     
     if (!auth) {
-      setError('Firebase is not initialized. If you are on the live site, please ensure that your environment variables (VITE_FIREBASE_API_KEY, etc.) are correctly set in the Vercel dashboard.');
+      setError('Firebase is not initialized. If you are on the live site, please ensure that your environment variables (VITE_FIREBASE_API_KEY, etc.) are correctly set in the Google Cloud dashboard.');
       return;
     }
 
