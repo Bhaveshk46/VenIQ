@@ -14,6 +14,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let unsubscribe = () => {};
+    let isMounted = true;
 
     if (!auth) {
       setLoading(false);
@@ -21,37 +22,37 @@ export function AuthProvider({ children }) {
     }
 
     const initAuth = async () => {
+      // Subscribe first so UI can unblock quickly even if redirect resolution is slow on mobile.
+      unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+        if (!isMounted) return;
+        setUser(firebaseUser ?? null);
+        setLoading(false);
+      });
+
       try {
-        // Ensure persistence is locked in
+        // Keep session across refreshes/reloads.
         await setPersistence(auth, browserLocalPersistence);
 
-        // Explicit Mobile Check: Only wait for redirect result on mobile to keep desktop flow fast
+        // Resolve redirect result only on mobile, but do not block initial render.
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        
+
         if (isMobile) {
-          console.log("📱 Mobile initialization: Waiting for redirect result...");
+          console.log("📱 Mobile initialization: resolving redirect result");
           const result = await getRedirectResult(auth);
-          if (result?.user) {
+          if (isMounted && result?.user) {
             console.log("✅ Mobile redirect login successful:", result.user.email);
             setUser(result.user);
           }
         }
       } catch (e) {
         console.error("❌ Auth initialization error:", e);
-      } finally {
-        // ✅ Start observer AFTER redirect handling (on mobile) or immediately (on desktop)
-        // By assigning to the outer scope variable, the cleanup function will have access to it
-        unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-          setUser(firebaseUser ?? null);
-          setLoading(false);
-        });
       }
     };
 
     initAuth();
 
-    // ✅ Cleanup properly unsubscribes using the variable in the outer scope
     return () => {
+      isMounted = false;
       if (unsubscribe) unsubscribe();
     };
   }, []);
