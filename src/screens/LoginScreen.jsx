@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { auth, googleProvider, signInWithPopup, signInWithRedirect } from '../../services/firebase';
+import { auth, googleProvider, signInWithPopup, signInWithRedirect, isFirebaseReady } from '../../services/firebase';
 import VenIQLogo from '../components/VenIQLogo';
 
 const GoogleIcon = () => (
@@ -18,7 +18,7 @@ export default function LoginScreen() {
   const handleGoogleLogin = async () => {
     setError('');
     
-    if (!auth) {
+    if (!auth || !isFirebaseReady) {
       setError('Firebase is not initialized. If you are on the live site, please ensure that your environment variables (VITE_FIREBASE_API_KEY, etc.) are correctly set in the Google Cloud dashboard.');
       return;
     }

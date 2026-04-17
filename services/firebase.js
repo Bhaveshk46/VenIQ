@@ -14,6 +14,8 @@ import {
   signInWithRedirect
 } from 'firebase/auth';
 
+const MOBILE_REDIRECT_TIMEOUT_MS = 5000;
+
 const getFirebaseEnv = (viteKey, expoKey) => {
   const value = import.meta.env[viteKey] || import.meta.env[expoKey];
   return typeof value === 'string' ? value.trim() : value;
@@ -30,6 +32,8 @@ const firebaseConfig = {
 let firebaseApp = null;
 let firebaseAuth = null;
 let firebaseDb = null;
+let firebaseInitError = null;
+let authBootstrapPromise = null;
 
 const isPlaceholder = (val) => !val || val === 'replace_in_gcp_console' || val.includes('your_');
 
@@ -46,6 +50,7 @@ if (
     
     console.log("Firebase services initialized successfully");
   } catch (error) {
+    firebaseInitError = error;
     console.error("Firebase initialization failed:", error);
   }
 } else {
@@ -65,6 +70,50 @@ if (
 export const app = firebaseApp;
 export const auth = firebaseAuth;
 export const db = firebaseDb;
+export const isFirebaseReady = Boolean(app && auth && db);
+export const firebaseDiagnostics = {
+  mode: import.meta.env.MODE,
+  hasApiKey: Boolean(firebaseConfig.apiKey),
+  hasAuthDomain: Boolean(firebaseConfig.authDomain),
+  hasDatabaseURL: Boolean(firebaseConfig.databaseURL),
+  hasProjectId: Boolean(firebaseConfig.projectId),
+  initError: firebaseInitError ? String(firebaseInitError?.message || firebaseInitError) : null,
+};
+
+const isMobileUserAgent = () =>
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+const withTimeout = (promise, timeoutMs) =>
+  Promise.race([
+    promise,
+    new Promise((resolve) => {
+      window.setTimeout(() => {
+        console.warn(`Auth bootstrap timed out after ${timeoutMs}ms.`);
+        resolve(null);
+      }, timeoutMs);
+    }),
+  ]);
+
+export const bootstrapAuthSession = async () => {
+  if (!auth) return null;
+  if (authBootstrapPromise) return authBootstrapPromise;
+
+  authBootstrapPromise = (async () => {
+    try {
+      await setPersistence(auth, browserLocalPersistence);
+
+      if (isMobileUserAgent()) {
+        await withTimeout(getRedirectResult(auth), MOBILE_REDIRECT_TIMEOUT_MS);
+      }
+    } catch (error) {
+      console.error("Auth bootstrap failed:", error);
+    }
+
+    return auth.currentUser ?? null;
+  })();
+
+  return authBootstrapPromise;
+};
 
 export const crowdLevelsRef = db ? ref(db, 'crowdLevels') : null;
 export const matchRef = db ? ref(db, 'match') : null;
