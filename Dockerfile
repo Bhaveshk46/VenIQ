@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Define build arguments for secure key injection
 ARG VITE_GEMINI_API_KEY
