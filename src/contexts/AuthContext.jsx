@@ -9,6 +9,10 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  
+  const forceLogin = (firebaseUser) => {
+    setUser(firebaseUser);
+  };
 
   useEffect(() => {
     let unsubscribe = () => {};
@@ -49,7 +53,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, logout }}>
+    <AuthContext.Provider value={{ user, logout, forceLogin }}>
       {children}
     </AuthContext.Provider>
   );

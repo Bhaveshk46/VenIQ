@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { auth, googleProvider, signInWithPopup, signInWithRedirect, isFirebaseReady } from '../../services/firebase';
+import { auth, googleProvider, signInWithPopup, signInWithRedirect, isFirebaseReady, getRedirectResult } from '../../services/firebase';
 import VenIQLogo from '../components/VenIQLogo';
+import { useAuth } from '../contexts/AuthContext';
 
 const GoogleIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ marginRight: '8px' }}>
@@ -12,6 +13,7 @@ const GoogleIcon = () => (
 );
 
 export default function LoginScreen() {
+  const { forceLogin } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -27,6 +29,19 @@ export default function LoginScreen() {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
+
+  // Handle post-redirect authentication
+  useEffect(() => {
+    if (!auth) return;
+    getRedirectResult(auth).then((result) => {
+      if (result && result.user) {
+        forceLogin(result.user);
+      }
+    }).catch(err => {
+      console.error("Redirect auth error:", err);
+      // Optional: setError(err.message);
+    });
+  }, [auth]);
 
   const handleGoogleLogin = async () => {
     setError('');
@@ -44,7 +59,11 @@ export default function LoginScreen() {
       if (isMobile) {
         await signInWithRedirect(auth, googleProvider);
       } else {
-        await signInWithPopup(auth, googleProvider);
+        const cred = await signInWithPopup(auth, googleProvider);
+        if (cred && cred.user) {
+          // Immediately redirect to main map screen by overriding state 
+          forceLogin(cred.user);
+        }
       }
     } catch (err) {
       console.error("Auth error:", err);

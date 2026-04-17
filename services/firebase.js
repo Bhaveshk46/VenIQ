@@ -11,7 +11,8 @@ import {
   signInWithEmailLink,
   setPersistence,
   browserLocalPersistence,
-  signInWithRedirect
+  signInWithRedirect,
+  getRedirectResult
 } from 'firebase/auth';
 
 const MOBILE_REDIRECT_TIMEOUT_MS = 5000;
