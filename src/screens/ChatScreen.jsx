@@ -154,14 +154,14 @@ export default function ChatScreen() {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div aria-hidden="true" style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'linear-gradient(135deg, #10B981, #34D399)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 15px rgba(16,185,129,0.3)' }}>
-                <Sparkles size={18} color="white" />
+              <div aria-hidden="true" style={{ width: '42px', height: '42px', borderRadius: '14px', background: 'linear-gradient(135deg, #10B981, #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 16px rgba(16,185,129,0.3)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <Sparkles size={20} color="white" />
               </div>
               <div>
-                <h1 style={{ margin: 0, fontSize: '1rem', fontWeight: 'bold', color: 'white' }}>AI Concierge</h1>
-                <p style={{ margin: 0, fontSize: '0.72rem', color: '#6ee7b7', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#6ee7b7', display: 'inline-block' }}></span>
-                  Powered by Gemini
+                <h1 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '800', color: 'white', letterSpacing: '-0.2px' }}>AI Concierge</h1>
+                <p style={{ margin: 0, fontSize: '0.75rem', color: '#10B981', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: '600' }}>
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 8px #10B981' }}></div>
+                  Powered by Gemini 2.0
                 </p>
               </div>
               </div>
@@ -206,8 +206,17 @@ export default function ChatScreen() {
             <div 
               role="article"
               aria-label={msg.role === 'user' ? "You said" : "VenIQ said"}
-              style={{ padding: '11px 15px', borderRadius: '18px', borderTopLeftRadius: msg.role === 'assistant' ? '4px' : '18px', borderTopRightRadius: msg.role === 'user' ? '4px' : '18px', background: msg.role === 'user' ? 'linear-gradient(135deg, #10B981 0%, #064E3B 100%)' : 'rgba(255,255,255,0.04)', border: msg.role === 'assistant' ? '1px solid rgba(255,255,255,0.08)' : 'none', boxShadow: msg.role === 'user' ? '0 4px 20px rgba(16,185,129,0.2)' : '0 2px 8px rgba(0,0,0,0.2)' }}>
-              <p style={{ color: 'white', lineHeight: '1.6', fontSize: '0.92rem', margin: 0, whiteSpace: 'pre-wrap' }}>{msg.text}</p>
+              style={{ 
+                padding: '12px 18px', 
+                borderRadius: '20px', 
+                borderTopLeftRadius: msg.role === 'assistant' ? '4px' : '20px', 
+                borderTopRightRadius: msg.role === 'user' ? '4px' : '20px', 
+                background: msg.role === 'user' ? 'linear-gradient(135deg, #10B981 0%, #064E3B 100%)' : 'rgba(255,255,255,0.03)', 
+                border: msg.role === 'assistant' ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(16,185,129,0.3)', 
+                boxShadow: msg.role === 'user' ? '0 10px 25px -5px rgba(16,185,129,0.4)' : '0 4px 15px rgba(0,0,0,0.3)',
+                backdropFilter: msg.role === 'assistant' ? 'blur(10px)' : 'none'
+              }}>
+              <p style={{ color: msg.role === 'user' ? 'white' : '#e2e8f0', lineHeight: '1.6', fontSize: '0.95rem', margin: 0, whiteSpace: 'pre-wrap' }}>{msg.text}</p>
             </div>
           </div>
         ))}
@@ -245,9 +254,19 @@ export default function ChatScreen() {
         )}
       </div>
 
-      {/* Input Bar */}
+      {/* Input Bar - Pushed up to clear bottom nav */}
       <div 
-        style={{ padding: '12px 14px', background: 'rgba(15, 20, 35, 0.98)', backdropFilter: 'blur(20px)', borderTop: '1px solid rgba(255,255,255,0.07)', display: 'flex', gap: '10px', alignItems: 'center' }}
+        style={{ 
+          padding: '12px 14px', 
+          paddingBottom: 'calc(14px + max(env(safe-area-inset-bottom), 80px))',
+          background: 'rgba(8, 12, 20, 0.95)', 
+          backdropFilter: 'blur(20px)', 
+          borderTop: '1px solid rgba(255,255,255,0.08)', 
+          display: 'flex', 
+          gap: '12px', 
+          alignItems: 'center',
+          boxShadow: '0 -10px 30px rgba(0,0,0,0.5)'
+        }}
         role="form"
         aria-label="Send message to concierge"
       >
@@ -259,7 +278,23 @@ export default function ChatScreen() {
           disabled={loading || cooldown > 0}
           placeholder={cooldown > 0 ? `Cooling down (${cooldown}s)...` : "Ask anything..."}
           aria-label="Message input field"
-          style={{ flex: 1, padding: '12px 16px', borderRadius: '24px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', outline: 'none', fontSize: '0.92rem', opacity: cooldown > 0 ? 0.6 : 1 }}
+          style={{ 
+            flex: 1, padding: '14px 20px', borderRadius: '28px', 
+            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', 
+            color: 'white', outline: 'none', fontSize: '1rem', 
+            transition: 'all 0.3s ease',
+            boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.2)'
+          }}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#10B981';
+            e.target.style.background = 'rgba(16,185,129,0.03)';
+            e.target.style.boxShadow = '0 0 15px rgba(16,185,129,0.2)';
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(255,255,255,0.1)';
+            e.target.style.background = 'rgba(255,255,255,0.04)';
+            e.target.style.boxShadow = 'inset 0 2px 4px rgba(0,0,0,0.2)';
+          }}
         />
         <button
           onClick={() => handleSend()}
