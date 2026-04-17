@@ -14,11 +14,16 @@ import {
   signInWithRedirect
 } from 'firebase/auth';
 
+const getFirebaseEnv = (viteKey, expoKey) => {
+  const value = import.meta.env[viteKey] || import.meta.env[expoKey];
+  return typeof value === 'string' ? value.trim() : value;
+};
+
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  apiKey: getFirebaseEnv('VITE_FIREBASE_API_KEY', 'EXPO_PUBLIC_FIREBASE_API_KEY'),
+  authDomain: getFirebaseEnv('VITE_FIREBASE_AUTH_DOMAIN', 'EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN'),
+  databaseURL: getFirebaseEnv('VITE_FIREBASE_DATABASE_URL', 'EXPO_PUBLIC_FIREBASE_DATABASE_URL'),
+  projectId: getFirebaseEnv('VITE_FIREBASE_PROJECT_ID', 'EXPO_PUBLIC_FIREBASE_PROJECT_ID'),
 };
 
 // Initialize Firebase services with descriptive diagnostics to help debug deployment (Cloud Run)
@@ -28,7 +33,12 @@ let firebaseDb = null;
 
 const isPlaceholder = (val) => !val || val === 'replace_in_gcp_console' || val.includes('your_');
 
-if (firebaseConfig.apiKey && firebaseConfig.projectId && !isPlaceholder(firebaseConfig.apiKey)) {
+if (
+  firebaseConfig.apiKey &&
+  firebaseConfig.projectId &&
+  firebaseConfig.authDomain &&
+  !isPlaceholder(firebaseConfig.apiKey)
+) {
   try {
     firebaseApp = initializeApp(firebaseConfig);
     firebaseAuth = getAuth(firebaseApp);
@@ -43,6 +53,7 @@ if (firebaseConfig.apiKey && firebaseConfig.projectId && !isPlaceholder(firebase
   console.warn("Firebase was not initialized. Check your environment variables.");
   console.table({
     "VITE_FIREBASE_API_KEY": firebaseConfig.apiKey ? (isPlaceholder(firebaseConfig.apiKey) ? "MISSING (Placeholder detected)" : "Present") : "MISSING",
+    "VITE/EXPO FIREBASE_AUTH_DOMAIN": firebaseConfig.authDomain ? "Present" : "MISSING",
     "VITE_FIREBASE_PROJECT_ID": firebaseConfig.projectId ? (isPlaceholder(firebaseConfig.projectId) ? "MISSING (Placeholder detected)" : "Present") : "MISSING",
     "VITE_FIREBASE_DATABASE_URL": firebaseConfig.databaseURL ? "Present" : "MISSING",
     "Environment": import.meta.env.MODE
