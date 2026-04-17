@@ -96,7 +96,7 @@ export default function LoginScreen() {
       <div className="arena-texture"></div>
 
       {/* Main Glassmorphic Card */}
-      <div className="login-card" style={{ border: '2px solid rgba(16, 185, 129, 0.1)', borderRadius: '12px', background: 'rgba(2, 6, 23, 0.85)' }}>
+      <div className="login-card" style={{ border: '2px solid rgba(16, 185, 129, 0.1)', borderRadius: '12px', background: 'rgba(8, 12, 20, 0.85)' }}>
         <div className="login-header">
           <VenIQLogo size={100} className="floating-logo" />
           <h1 className="brand-title" style={{ fontSize: '3.5rem', fontStyle: 'italic', fontWeight: '900', color: '#fff', background: 'none', WebkitTextFillColor: 'initial' }}>

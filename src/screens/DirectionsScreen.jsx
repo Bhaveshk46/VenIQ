@@ -390,7 +390,7 @@ export default function DirectionsScreen() {
   };
 
   return (
-    <div className="animate-fade-in" style={{ padding: '0 0 180px 0', minHeight: '100vh', background: '#080c14', color: 'white', fontFamily: "'Inter', sans-serif" }}>
+    <div className="animate-fade-in" style={{ height: '100%', overflowY: 'auto', color: 'white', fontFamily: "'Inter', sans-serif", paddingBottom: '120px' }}>
       
       {/* Header */}
       <div style={{ 

@@ -93,17 +93,18 @@ export default function TicketScreen() {
   return (
     <div style={{ 
       width: '100%', 
-      minHeight: '100%', 
+      height: '100%', 
+      overflowY: 'auto',
       padding: '24px', 
-      paddingTop: 'calc(env(safe-area-inset-top, 0px) + 40px)', // Increased padding for safety
+      paddingTop: 'calc(env(safe-area-inset-top, 0px) + 40px)', 
+      paddingBottom: '120px',
       display: 'flex', 
       flexDirection: 'column',
       alignItems: 'center', 
     }}>
       <div style={{ 
         display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '400px', width: '100%',
-        animation: 'slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-        paddingBottom: '120px' // Extra space at bottom to clear nav
+        animation: 'slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>

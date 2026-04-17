@@ -99,7 +99,7 @@ export default function ChatScreen() {
   const showSuggestions = messages.length <= 1 && !loading;
 
   return (
-    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#080c14' }}>
+    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
 
       {/* Header */}
       <div style={{

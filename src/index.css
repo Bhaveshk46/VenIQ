@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap');
 
 :root {
-  --bg-dark: #010409; 
+  --bg-dark: #080c14; 
   --bg-panel: rgba(13, 17, 28, 0.7);
   --border-glass: rgba(16, 185, 129, 0.25);
   --primary: #10B981; 
@@ -11,7 +11,7 @@
   --text-main: #ffffff;
   --text-muted: #94a3b8;
   
-  --safe-bottom: 80px; /* Space for bottom nav */
+  --safe-bottom: 80px; 
 }
 
 * {
@@ -116,14 +116,10 @@ button {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* Allow scroll on all screen sizes */
-  overflow-x: hidden;
+  overflow: hidden; /* Each screen handles its own scroll */
   position: relative;
-  /* Smooth scrolling */
   scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch; /* Momentum scroll on iOS */
-  /* FIX: Ensure we can scroll past the bottom nav */
-  padding-bottom: calc(65px + max(env(safe-area-inset-bottom), 8px));
+  -webkit-overflow-scrolling: touch;
 }
 
 /* On mobile, same behavior */
@@ -405,7 +401,7 @@ h1, h2, h3, h4 {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #05080f;
+  background-color: var(--bg-dark);
   position: relative;
   overflow: hidden;
   padding: 24px;

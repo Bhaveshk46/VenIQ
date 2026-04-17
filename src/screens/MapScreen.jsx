@@ -136,7 +136,7 @@ export default function MapScreen() {
     <div ref={mapContainerRef} style={{ position: 'relative', height: '100%', width: '100%', display: 'flex', flexDirection: 'column', overflowY: 'auto', overflowX: 'hidden', userSelect: 'none' }} className="animate-fade-in">
       
       {/* Arena Scoreboard Header */}
-      <div style={{ margin: 'calc(env(safe-area-inset-top, 0px) + 8px) 12px 0 12px', zIndex: 100, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 18px', background: '#010409', border: '2px solid rgba(16, 185, 129, 0.4)', borderRightWidth: '8px', boxShadow: '10px 10px 0 rgba(16, 185, 129, 0.1)', position: 'relative' }}>
+      <div style={{ margin: 'calc(env(safe-area-inset-top, 0px) + 8px) 12px 0 12px', zIndex: 100, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 18px', background: 'var(--bg-dark)', border: '2px solid rgba(16, 185, 129, 0.4)', borderRightWidth: '8px', boxShadow: '10px 10px 0 rgba(16, 185, 129, 0.1)', position: 'relative' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           {/* Profile Trigger */}
           <div 
