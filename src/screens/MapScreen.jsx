@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback, memo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, User as UserIcon, LogOut } from 'lucide-react';
 import { onValue } from 'firebase/database';
 import { crowdLevelsRef, matchRef } from '../../services/firebase';
 import { VENUE_LOCATIONS } from '../../utils/directions';
@@ -116,7 +116,7 @@ export default function MapScreen() {
       case 'aid': return '#ef4444';
       case 'merch': return '#ec4899';
       case 'seat': return '#10b981';
-      default: return '#7f77dd';
+      default: return '#10B981';
     }
   };
 
@@ -129,51 +129,84 @@ export default function MapScreen() {
   return (
     <div style={{ position: 'relative', height: '100%', width: '100%', display: 'flex', flexDirection: 'column', overflowY: 'auto', overflowX: 'hidden', userSelect: 'none' }} className="animate-fade-in">
       
-      {/* Header */}
-      <div style={{ margin: 'calc(env(safe-area-inset-top, 0px) + 4px) 12px 0 12px', zIndex: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'rgba(17, 24, 39, 0.9)', backdropFilter: 'blur(15px)', borderRadius: '14px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-        <div>
-          <h1 style={{ margin: 0, fontSize: '1rem', color: 'white', fontWeight: '800', letterSpacing: '0.5px' }}>STADIUM MAP</h1>
-          <p style={{ margin: 0, fontSize: '0.65rem', color: '#6ee7b7' }}>LIVE • {matchData?.status || 'Pre-match'}</p>
+      {/* Arena Scoreboard Header */}
+      <div style={{ margin: 'calc(env(safe-area-inset-top, 0px) + 8px) 12px 0 12px', zIndex: 100, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 18px', background: '#010409', border: '2px solid rgba(16, 185, 129, 0.4)', borderRightWidth: '8px', boxShadow: '10px 10px 0 rgba(16, 185, 129, 0.1)', position: 'relative' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {/* Profile Trigger */}
+          <div 
+            ref={profileRef}
+            onClick={() => setProfileOpen(!profileOpen)}
+            style={{ 
+              width: '40px', height: '40px', borderRadius: '12px', 
+              background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', position: 'relative'
+            }}
+          >
+            {user?.photoURL ? (
+              <img src={user.photoURL} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '11px' }} />
+            ) : (
+              <UserIcon size={20} color="#10B981" />
+            )}
+            
+            {profileOpen && (
+              <div style={{ 
+                position: 'absolute', top: 'calc(100% + 12px)', left: 0, 
+                background: '#010409', border: '1px solid #10B981', 
+                borderRadius: '12px', padding: '8px', width: '140px',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.8)', zIndex: 200,
+                animation: 'fadeIn 0.2s'
+              }}>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); logout(); }}
+                  style={{ 
+                    width: '100%', padding: '10px', background: 'rgba(239, 68, 68, 0.1)', 
+                    border: 'none', borderRadius: '8px', color: '#ff4d4d', 
+                    fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', 
+                    alignItems: 'center', gap: '8px', cursor: 'pointer' 
+                  }}
+                >
+                  <LogOut size={14} /> Logout
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div>
+            <h1 style={{ margin: 0, fontSize: '0.85rem', color: '#10B981', fontWeight: '900', letterSpacing: '2px', textTransform: 'uppercase' }}>VENIQ LIVE</h1>
+            <p style={{ margin: 0, fontSize: '1.2rem', color: 'white', fontWeight: '900', fontStyle: 'italic' }}>WANKHEDE ARENA</p>
+          </div>
         </div>
-        <div ref={profileRef}>
-          <button onClick={() => setProfileOpen(p => !p)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-            <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'linear-gradient(135deg, #7f77dd, #4f46e5)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>{(user?.displayName || 'U')[0].toUpperCase()}</div>
-          </button>
-          {profileOpen && (
-            <div style={{ position: 'absolute', top: '48px', right: 0, background: 'rgba(17,24,39,1)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '14px', padding: '8px', minWidth: '180px', zIndex: 100 }}>
-              <button onClick={() => { setProfileOpen(false); logout(); }} style={{ width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: '#ef4444', fontWeight: '600', textAlign: 'left', cursor: 'pointer' }}>Sign Out</button>
-            </div>
-          )}
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ fontSize: '0.6rem', color: '#94a3b8', fontWeight: 'bold' }}>MATCH STATUS</div>
+          <div style={{ fontSize: '0.9rem', color: '#10B981', fontWeight: '900' }}>● {matchData?.status?.toUpperCase() || '2ND HALF'}</div>
         </div>
       </div>
 
-      {/* Filters */}
+      {/* Sporty Performance Filters */}
       <div 
-        style={{ display: 'flex', overflowX: 'auto', gap: '8px', padding: '10px 16px 4px 16px', flexShrink: 0 }}
+        style={{ display: 'flex', overflowX: 'auto', gap: '4px', padding: '12px 12px 4px 12px', flexShrink: 0 }}
         role="tablist"
-        aria-label="Stadium filters"
       >
         {['all', 'food', 'restroom', 'seat', 'gate', 'aid', 'merch'].map(id => (
             <button 
               key={id} 
               onClick={() => handleFilterClick(id)} 
-              role="tab"
-              aria-selected={activeFilter === id}
-              aria-label={`Filter by ${id}`}
               style={{ 
-                padding: '10px 20px', borderRadius: '40px', 
-                background: activeFilter === id ? 'linear-gradient(135deg, #7f77dd, #635ac7)' : 'rgba(255,255,255,0.06)', 
-                color: activeFilter === id ? 'white' : '#94a3b8', 
-                border: '1px solid rgba(255,255,255,0.1)', fontWeight: '600', 
-                fontSize: '0.85rem', whiteSpace: 'nowrap',
-                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                transform: `scale(${activeFilter === id ? 1.05 : 1})`,
-                boxShadow: activeFilter === id ? '0 4px 15px rgba(127,119,221,0.3)' : 'none'
+                padding: '12px 24px', 
+                background: activeFilter === id ? '#10B981' : 'rgba(255,255,255,0.03)', 
+                color: activeFilter === id ? '#000' : '#fff', 
+                border: activeFilter === id ? 'none' : '1px solid rgba(255,255,255,0.1)', 
+                fontWeight: '900', 
+                fontSize: '0.75rem', 
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                transition: 'all 0.1s ease',
+                clipPath: 'polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0% 100%)', // Refined Sporty Angles
+                minWidth: '120px'
               }}
-              onPointerDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
-              onPointerUp={(e) => e.currentTarget.style.transform = `scale(${activeFilter === id ? 1.05 : 1})`}
             >
-              {id.toUpperCase()}
+              {id}
             </button>
         ))}
       </div>
@@ -184,15 +217,35 @@ export default function MapScreen() {
         onScrollCapture={() => setHasScrolled(true)} 
         onTouchMove={() => setHasScrolled(true)} 
         onWheel={() => setHasScrolled(true)}
+        style={{ padding: '0 12px' }}
       >
         
-        {/* Map Container */}
-        <div className="map-section" style={{ flexDirection: 'column' }}>
-          <div style={{ position: 'relative', width: '100%', maxWidth: 'calc(100vh - 220px)', aspectRatio: '1/1' }}>
+        {/* Map Container - Arena Edition Console */}
+        <div className="map-section" style={{ 
+          flexDirection: 'column', 
+          background: 'rgba(1, 4, 9, 0.4)', 
+          borderRadius: '24px', 
+          border: '1px solid rgba(16, 185, 129, 0.1)',
+          padding: '12px',
+          marginTop: '40px', // Shifted downward as requested
+          boxShadow: '0 30px 60px rgba(0,0,0,0.6)',
+          position: 'relative'
+        }}>
+          {/* Breadcrumb removed as requested */}
+
+          <div style={{ 
+            position: 'relative', 
+            width: '100%', 
+            maxWidth: 'calc(100vh - 320px)', 
+            aspectRatio: '1/1', 
+            margin: '0 auto',
+            maskImage: 'radial-gradient(circle, black 82%, transparent 98%)', // Expansive mask for edge visibility
+            WebkitMaskImage: 'radial-gradient(circle, black 82%, transparent 98%)'
+          }}>
             <img 
-              src="https://storage.googleapis.com/veniq-assets/stadium_map.png" 
+              src="/emerald_map.png" 
               alt="Wankhede Stadium Map Layout" 
-              style={{ width: '100%', height: '100%', opacity: 0.85 }} 
+              style={{ width: '100%', height: '100%', opacity: 0.9, objectFit: 'contain' }} 
             />
             {zones.map((zone) => (
               <MapMarker 
@@ -204,19 +257,17 @@ export default function MapScreen() {
             ))}
           </div>
 
-        {/* Legend Ribbon */}
-        {!selectedZone && (
-          <div style={{ padding: '0 16px 24px', display: 'flex', justifyContent: 'center', marginTop: '12px' }}>
-            <div 
-              role="complementary"
-              aria-label="Map color legend"
-              style={{ 
-                display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px 16px', 
-                padding: '12px 20px', background: 'rgba(15, 23, 42, 0.85)', backdropFilter: 'blur(20px)', 
-                borderRadius: '100px', border: '1px solid rgba(255,255,255,0.12)', 
-                boxShadow: '0 8px 32px rgba(0,0,0,0.4)', maxWidth: '100%' 
-              }}
-            >
+          {/* Integrated Legend Bottom Bar */}
+          {!selectedZone && (
+            <div style={{ 
+              marginTop: '20px', 
+              padding: '12px 0 4px 0', 
+              borderTop: '1px solid rgba(16, 185, 129, 0.1)',
+              display: 'flex', 
+              flexWrap: 'wrap', 
+              justifyContent: 'center', 
+              gap: '8px 16px' 
+            }}>
               {[
                 { color: '#3b82f6', label: 'Gates' },
                 { color: '#f59e0b', label: 'Food' },
@@ -226,22 +277,22 @@ export default function MapScreen() {
                 { color: '#ec4899', label: 'Store' },
               ].map(item => (
                 <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.color }} />
-                  <span style={{ color: '#cbd5e1', fontSize: '0.68rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{item.label}</span>
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: item.color }} />
+                  <span style={{ color: '#94a3b8', fontSize: '0.6rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{item.label}</span>
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          )}
+        </div>
+
 
         {/* Scroll Hint (Mobile Only) */}
         {selectedZone && !hasScrolled && (
           <div className="mobile-scroll-hint">
              <span style={{ fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.5px' }}>Scroll for Info</span>
-             <ChevronDown size={18} color="#a39dfa" />
+             <ChevronDown size={18} color="#34D399" />
           </div>
         )}
-        </div>
 
         {/* Info Area */}
         <div className={`info-section ${selectedZone ? 'active' : ''}`}>

@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Ticket, ArrowRight } from 'lucide-react';
+import { Ticket, ArrowRight, User as UserIcon, LogOut } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -63,9 +63,18 @@ function generateTicketFromUID(uid) {
 
 export default function TicketScreen() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const [profileOpen, setProfileOpen] = React.useState(false);
+  const profileRef = React.useRef(null);
 
-  const ticket = useMemo(() => generateTicketFromUID(user?.uid), [user?.uid]);
+  // Close profile dropdown on outside click
+  React.useEffect(() => {
+    const handler = (e) => { if (profileRef.current && !profileRef.current.contains(e.target)) setProfileOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const ticket = React.useMemo(() => generateTicketFromUID(user?.uid), [user?.uid]);
 
   const findMySeat = () => {
     if (ticket) {
@@ -96,9 +105,53 @@ export default function TicketScreen() {
         animation: 'slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
         paddingBottom: '120px' // Extra space at bottom to clear nav
       }}>
-        <h1 style={{ color: 'white', margin: 0, fontSize: '1.8rem', display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Ticket size={28} color="#7f77dd" /> My Tickets
-        </h1>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            {/* Profile Trigger */}
+            <div 
+              ref={profileRef}
+              onClick={() => setProfileOpen(!profileOpen)}
+              style={{ 
+                width: '38px', height: '38px', borderRadius: '12px', 
+                background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', position: 'relative'
+              }}
+            >
+              {user?.photoURL ? (
+                <img src={user.photoURL} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '11px' }} />
+              ) : (
+                <UserIcon size={18} color="#10B981" />
+              )}
+              
+              {profileOpen && (
+                <div style={{ 
+                  position: 'absolute', top: 'calc(100% + 12px)', left: 0, 
+                  background: '#010409', border: '1px solid #10B981', 
+                  borderRadius: '12px', padding: '8px', width: '140px',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.8)', zIndex: 200,
+                  animation: 'fadeIn 0.2s'
+                }}>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); logout(); }}
+                    style={{ 
+                      width: '100%', padding: '10px', background: 'rgba(239, 68, 68, 0.1)', 
+                      border: 'none', borderRadius: '8px', color: '#ff4d4d', 
+                      fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', 
+                      alignItems: 'center', gap: '8px', cursor: 'pointer' 
+                    }}
+                  >
+                    <LogOut size={14} /> Logout
+                  </button>
+                </div>
+              )}
+            </div>
+            
+            <h1 style={{ color: 'white', margin: 0, fontSize: '1.8rem', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <Ticket size={28} color="#10B981" /> My Tickets
+            </h1>
+          </div>
+        </div>
 
         <div style={{
           background: 'rgba(17, 24, 39, 0.8)', backdropFilter: 'blur(12px)',
@@ -106,7 +159,7 @@ export default function TicketScreen() {
           boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
         }}>
           {/* Ticket Header */}
-          <div style={{ background: 'linear-gradient(135deg, #7f77dd 0%, #4f46e5 100%)', padding: '24px', color: 'white' }}>
+          <div style={{ background: 'linear-gradient(135deg, #10B981 0%, #064E3B 100%)', padding: '24px', color: 'white' }}>
             <h2 style={{ margin: '0 0 4px 0', fontSize: '1.4rem' }}>{ticket.eventName}</h2>
             <p style={{ margin: 0, opacity: 0.9, fontSize: '0.9rem' }}>{ticket.stadium}</p>
             <div style={{ display: 'flex', gap: '16px', marginTop: '16px', fontSize: '0.9rem', opacity: 0.9 }}>
@@ -161,10 +214,10 @@ export default function TicketScreen() {
               onClick={findMySeat}
               style={{
                 width: '100%', padding: '16px', borderRadius: '12px',
-                background: 'linear-gradient(135deg, #7f77dd 0%, #a39dfa 100%)',
+                background: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
                 color: 'white', fontWeight: 'bold', fontSize: '1.1rem', border: 'none', cursor: 'pointer',
                 display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px',
-                boxShadow: '0 4px 15px rgba(127, 119, 221, 0.4)'
+                boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)'
               }}
             >
               Find My Seat <ArrowRight size={20} />

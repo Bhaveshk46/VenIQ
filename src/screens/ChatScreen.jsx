@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Sparkles, Zap, MapPin } from 'lucide-react';
+import { Send, Bot, Sparkles, Zap, MapPin, User as UserIcon, LogOut } from 'lucide-react';
 import { getGeminiResponse } from '../../services/gemini';
 import { useStadium } from '../contexts/StadiumContext';
+import { useAuth } from '../contexts/AuthContext';
 import { MAX_CHAT_INPUT_LENGTH } from '../utils/constants';
 
 const SUGGESTED_PROMPTS = [
@@ -14,7 +15,17 @@ const SUGGESTED_PROMPTS = [
 ];
 
 export default function ChatScreen() {
+  const { user, logout } = useAuth();
   const { selectedZone, matchData, crowdLevels } = useStadium();
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef(null);
+
+  // Close profile dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => { if (profileRef.current && !profileRef.current.contains(e.target)) setProfileOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   const [messages, setMessages] = useState([
     { id: '1', role: 'assistant', text: "Hey! I'm VenIQ ✨\n\nI'm your official stadium concierge. Ask me for directions, the best snacks, or help finding your gate!" }
@@ -101,20 +112,62 @@ export default function ChatScreen() {
         borderBottom: '1px solid rgba(255,255,255,0.06)',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div aria-hidden="true" style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'linear-gradient(135deg, #7f77dd, #a39dfa)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 15px rgba(127,119,221,0.3)' }}>
-              <Sparkles size={18} color="white" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            {/* Profile Trigger */}
+            <div 
+              ref={profileRef}
+              onClick={() => setProfileOpen(!profileOpen)}
+              style={{ 
+                width: '38px', height: '38px', borderRadius: '12px', 
+                background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', position: 'relative'
+              }}
+            >
+              {user?.photoURL ? (
+                <img src={user.photoURL} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '11px' }} />
+              ) : (
+                <UserIcon size={18} color="#10B981" />
+              )}
+              
+              {profileOpen && (
+                <div style={{ 
+                  position: 'absolute', top: 'calc(100% + 12px)', left: 0, 
+                  background: '#010409', border: '1px solid #10B981', 
+                  borderRadius: '12px', padding: '8px', width: '140px',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.8)', zIndex: 200,
+                  animation: 'fadeIn 0.2s'
+                }}>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); logout(); }}
+                    style={{ 
+                      width: '100%', padding: '10px', background: 'rgba(239, 68, 68, 0.1)', 
+                      border: 'none', borderRadius: '8px', color: '#ff4d4d', 
+                      fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', 
+                      alignItems: 'center', gap: '8px', cursor: 'pointer' 
+                    }}
+                  >
+                    <LogOut size={14} /> Logout
+                  </button>
+                </div>
+              )}
             </div>
-            <div>
-              <h1 style={{ margin: 0, fontSize: '1rem', fontWeight: 'bold', color: 'white' }}>AI Concierge</h1>
-              <p style={{ margin: 0, fontSize: '0.72rem', color: '#6ee7b7', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#6ee7b7', display: 'inline-block' }}></span>
-                Powered by Gemini
-              </p>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div aria-hidden="true" style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'linear-gradient(135deg, #10B981, #34D399)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 15px rgba(16,185,129,0.3)' }}>
+                <Sparkles size={18} color="white" />
+              </div>
+              <div>
+                <h1 style={{ margin: 0, fontSize: '1rem', fontWeight: 'bold', color: 'white' }}>AI Concierge</h1>
+                <p style={{ margin: 0, fontSize: '0.72rem', color: '#6ee7b7', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#6ee7b7', display: 'inline-block' }}></span>
+                  Powered by Gemini
+                </p>
+              </div>
+              </div>
             </div>
-          </div>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <div style={{ background: 'rgba(127,119,221,0.15)', border: '1px solid rgba(127,119,221,0.3)', borderRadius: '8px', padding: '4px 10px', fontSize: '0.75rem', color: '#a39dfa' }}>
+            <div style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '8px', padding: '4px 10px', fontSize: '0.75rem', color: '#34D399' }}>
               <Zap size={11} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
               {matchData?.status || 'Pre-match'}
             </div>
@@ -123,8 +176,8 @@ export default function ChatScreen() {
 
         {/* Zone Context Badge */}
         {selectedZone && (
-          <div style={{ marginTop: '10px', background: 'rgba(127,119,221,0.1)', border: '1px solid rgba(127,119,221,0.2)', borderRadius: '8px', padding: '6px 12px', fontSize: '0.78rem', color: '#c4c0f5', display: 'flex', alignItems: 'center', gap: '6px', animation: 'fadeIn 0.3s' }}>
-            <MapPin size={12} color="#a39dfa" />
+          <div style={{ marginTop: '10px', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: '8px', padding: '6px 12px', fontSize: '0.78rem', color: '#34D399', display: 'flex', alignItems: 'center', gap: '6px', animation: 'fadeIn 0.3s' }}>
+            <MapPin size={12} color="#10B981" />
             <span>Currently viewing: <strong style={{ color: 'white' }}>{selectedZone.name}</strong> — Ask me anything about this zone!</span>
           </div>
         )}
@@ -147,13 +200,13 @@ export default function ChatScreen() {
           }}>
             <div 
               aria-hidden="true"
-              style={{ minWidth: '30px', height: '30px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', flexShrink: 0, background: msg.role === 'user' ? '#7f77dd' : 'rgba(255,255,255,0.08)', boxShadow: msg.role === 'user' ? '0 4px 12px rgba(127,119,221,0.4)' : 'none' }}>
-              {msg.role === 'user' ? <User size={14} color="white" /> : <Bot size={14} color="#a39dfa" />}
+              style={{ minWidth: '30px', height: '30px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', flexShrink: 0, background: msg.role === 'user' ? '#10B981' : 'rgba(255,255,255,0.08)', boxShadow: msg.role === 'user' ? '0 4px 12px rgba(16,185,129,0.4)' : 'none' }}>
+              {msg.role === 'user' ? <UserIcon size={14} color="white" /> : <Bot size={14} color="#34D399" />}
             </div>
             <div 
               role="article"
               aria-label={msg.role === 'user' ? "You said" : "VenIQ said"}
-              style={{ padding: '11px 15px', borderRadius: '18px', borderTopLeftRadius: msg.role === 'assistant' ? '4px' : '18px', borderTopRightRadius: msg.role === 'user' ? '4px' : '18px', background: msg.role === 'user' ? 'linear-gradient(135deg, #7f77dd 0%, #635ac7 100%)' : 'rgba(255,255,255,0.04)', border: msg.role === 'assistant' ? '1px solid rgba(255,255,255,0.08)' : 'none', boxShadow: msg.role === 'user' ? '0 4px 20px rgba(127,119,221,0.2)' : '0 2px 8px rgba(0,0,0,0.2)' }}>
+              style={{ padding: '11px 15px', borderRadius: '18px', borderTopLeftRadius: msg.role === 'assistant' ? '4px' : '18px', borderTopRightRadius: msg.role === 'user' ? '4px' : '18px', background: msg.role === 'user' ? 'linear-gradient(135deg, #10B981 0%, #064E3B 100%)' : 'rgba(255,255,255,0.04)', border: msg.role === 'assistant' ? '1px solid rgba(255,255,255,0.08)' : 'none', boxShadow: msg.role === 'user' ? '0 4px 20px rgba(16,185,129,0.2)' : '0 2px 8px rgba(0,0,0,0.2)' }}>
               <p style={{ color: 'white', lineHeight: '1.6', fontSize: '0.92rem', margin: 0, whiteSpace: 'pre-wrap' }}>{msg.text}</p>
             </div>
           </div>
@@ -163,11 +216,11 @@ export default function ChatScreen() {
         {loading && (
           <div style={{ display: 'flex', gap: '10px', alignSelf: 'flex-start' }} aria-label="VenIQ is thinking">
             <div style={{ minWidth: '30px', height: '30px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'rgba(255,255,255,0.08)', flexShrink: 0 }}>
-              <Bot size={14} color="#a39dfa" />
+              <Bot size={14} color="#34D399" />
             </div>
             <div style={{ padding: '14px 18px', borderRadius: '18px', borderTopLeftRadius: '4px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', gap: '5px', alignItems: 'center' }}>
               {[0, 0.2, 0.4].map((delay, i) => (
-                <div key={i} style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#7f77dd', animation: `bounce 1.2s ${delay}s infinite ease-in-out` }} />
+                <div key={i} style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', animation: `bounce 1.2s ${delay}s infinite ease-in-out` }} />
               ))}
             </div>
           </div>
@@ -183,7 +236,7 @@ export default function ChatScreen() {
                   key={prompt} 
                   onClick={() => handleSend(prompt)} 
                   aria-label={`Ask: ${prompt}`}
-                  style={{ padding: '7px 13px', background: 'rgba(127,119,221,0.08)', border: '1px solid rgba(127,119,221,0.2)', borderRadius: '20px', color: '#c4c0f5', fontSize: '0.8rem', cursor: 'pointer', transition: 'all 0.2s' }}>
+                  style={{ padding: '7px 13px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: '20px', color: '#10B981', fontSize: '0.8rem', cursor: 'pointer', transition: 'all 0.2s' }}>
                   {prompt}
                 </button>
               ))}
@@ -213,7 +266,7 @@ export default function ChatScreen() {
           disabled={loading || !input.trim() || cooldown > 0}
           aria-label="Send message"
           title="Send message"
-          style={{ minWidth: '46px', height: '46px', borderRadius: '50%', background: (!input.trim() || loading || cooldown > 0) ? 'rgba(127,119,221,0.3)' : 'linear-gradient(135deg, #7f77dd, #635ac7)', display: 'flex', justifyContent: 'center', alignItems: 'center', border: 'none', cursor: (loading || cooldown > 0) ? 'wait' : 'pointer', boxShadow: (!input.trim() || loading || cooldown > 0) ? 'none' : '0 4px 15px rgba(127,119,221,0.4)', transition: 'all 0.3s' }}
+          style={{ minWidth: '46px', height: '46px', borderRadius: '50%', background: (!input.trim() || loading || cooldown > 0) ? 'rgba(16,185,129,0.3)' : 'linear-gradient(135deg, #10B981, #064E3B)', display: 'flex', justifyContent: 'center', alignItems: 'center', border: 'none', cursor: (loading || cooldown > 0) ? 'wait' : 'pointer', boxShadow: (!input.trim() || loading || cooldown > 0) ? 'none' : '0 4px 15px rgba(16,185,129,0.4)', transition: 'all 0.3s' }}
         >
           <Send size={17} color="white" />
         </button>

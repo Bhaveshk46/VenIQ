@@ -90,53 +90,52 @@ export default function LoginScreen() {
   return (
     <div className="login-container">
       {/* Dynamic Animated Background */}
-      <div 
-        className="blob blob-1" 
-        style={{ transform: `translate(${mousePos.x}px, ${mousePos.y}px)` }}
-      ></div>
-      <div 
-        className="blob blob-2"
-        style={{ transform: `translate(${-mousePos.x * 1.5}px, ${-mousePos.y * 1.5}px)` }}
-      ></div>
-      <div className="grid-overlay"></div>
+      <div className="blob blob-1" style={{ background: 'radial-gradient(circle, #064E3B 0%, rgba(6, 78, 59, 0) 70%)' }}></div>
+      <div className="blob blob-2" style={{ background: 'radial-gradient(circle, #10B981 0%, rgba(16, 185, 129, 0) 70%)' }}></div>
+      <div className="grid-overlay" style={{ opacity: 0.1 }}></div>
+      <div className="arena-texture"></div>
 
       {/* Main Glassmorphic Card */}
-      <div className="login-card">
+      <div className="login-card" style={{ border: '2px solid rgba(16, 185, 129, 0.1)', borderRadius: '12px', background: 'rgba(2, 6, 23, 0.85)' }}>
         <div className="login-header">
           <VenIQLogo size={100} className="floating-logo" />
-          <h1 className="brand-title">VenIQ</h1>
-          <p className="brand-subtitle">The Intelligence Behind The Arena</p>
+          <h1 className="brand-title" style={{ fontSize: '3.5rem', fontStyle: 'italic', fontWeight: '900', color: '#fff', background: 'none', WebkitTextFillColor: 'initial' }}>
+            Ven<span style={{ color: '#10B981' }}>IQ</span>
+          </h1>
+          <p className="brand-subtitle" style={{ fontWeight: '800', textTransform: 'uppercase', letterSpacing: '2px', color: '#10B981' }}>Arena Access Restricted</p>
         </div>
 
         <div className="login-body">
-          <button
+          <button 
+            className={`google-btn ${loading ? 'loading' : ''}`}
             onClick={handleGoogleLogin}
             disabled={loading}
-            className={`google-btn ${loading ? 'loading' : ''}`}
-            aria-label="Sign in with Google"
+            style={{ background: '#10B981', borderRadius: '4px', border: 'none', height: '60px', position: 'relative', overflow: 'hidden' }}
           >
+            <div className="btn-scan"></div>
+            <div className="btn-glow" style={{ background: 'linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent)' }}></div>
             {loading ? (
-              <span className="btn-loading-content">
-                <div className="spinner"></div>
-                Authenticating...
-              </span>
+              <div className="btn-loading-content">
+                <div className="spinner" style={{ borderTopColor: '#000' }}></div>
+                <span style={{ color: '#000' }}>VALIDATING PASS...</span>
+              </div>
             ) : (
-              <span className="btn-content">
-                <GoogleIcon /> Continue with Google
-              </span>
+              <div className="btn-content" style={{ gap: '12px', color: '#000' }}>
+                <GoogleIcon />
+                <span style={{ fontSize: '0.9rem', letterSpacing: '1px', fontWeight: '900' }}>GET ARENA PASS</span>
+              </div>
             )}
-            <div className="btn-glow"></div>
           </button>
 
           {error && (
             <div className="error-message">
-              <span>{error}</span>
+              <span>SYSTEM ERROR: {error}</span>
             </div>
           )}
         </div>
 
-        <div className="login-footer">
-          <p>By signing in, you agree to our <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a></p>
+        <div className="login-footer" style={{ color: '#94a3b8', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '0.7rem' }}>
+          By entering, you agree to the <a href="#" style={{ color: '#10B981' }}>Arena Code of Conduct</a>
         </div>
       </div>
     </div>

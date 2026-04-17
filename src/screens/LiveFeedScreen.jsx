@@ -31,9 +31,9 @@ export default function LiveFeedScreen() {
           <h1 className="screen-title">Live Updates</h1>
           <p style={{ color: 'var(--text-muted)' }}>Real-time stadium activity.</p>
         </div>
-        <div style={{ background: 'rgba(127, 119, 221, 0.2)', padding: '10px 14px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#7f77dd', animation: 'fadeIn 1s infinite alternate' }}></div>
-          <span style={{ color: '#a39dfa', fontWeight: 'bold', fontSize: '0.9rem' }}>LIVE</span>
+        <div style={{ background: 'rgba(16, 185, 129, 0.2)', padding: '10px 14px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981', animation: 'fadeIn 1s infinite alternate' }}></div>
+          <span style={{ color: '#34D399', fontWeight: 'bold', fontSize: '0.9rem' }}>LIVE</span>
         </div>
       </div>
 
@@ -48,14 +48,14 @@ export default function LiveFeedScreen() {
               animation: `fadeIn 0.5s ease forwards ${index * 0.1}s`,
               opacity: 0,
               transform: 'translateY(10px)',
-              borderLeft: '4px solid #7f77dd'
+              borderLeft: '4px solid #10B981'
             }}
           >
             <div style={{ 
               minWidth: '40px', height: '40px', borderRadius: '12px', 
               background: 'rgba(255,255,255,0.05)', 
               display: 'flex', justifyContent: 'center', alignItems: 'center',
-              color: '#a39dfa'
+              color: '#34D399'
             }}>
               <AlertCircle size={20} />
             </div>

@@ -22,10 +22,10 @@ const ScreenLoader = () => (
   }}>
     <div style={{
       width: '50px', height: '50px', borderRadius: '15px',
-      background: 'linear-gradient(135deg, #7f77dd, #a39dfa)',
+      background: 'linear-gradient(135deg, #10B981, #34D399)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       animation: 'pulse 1.5s infinite',
-      boxShadow: '0 0 20px rgba(127,119,221,0.4)'
+      boxShadow: '0 0 20px rgba(16, 185, 129, 0.4)'
     }}>
       <Sparkles size={24} color="white" />
     </div>
@@ -108,6 +108,7 @@ function AppContent() {
 export default function App() {
   return (
     <AuthProvider>
+      <div className="arena-texture"></div>
       <AppContent />
     </AuthProvider>
   );

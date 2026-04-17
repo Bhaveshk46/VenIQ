@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Navigation, MapPin, Car, Train, Bus, Bike, 
-  Clock, AlertTriangle,
+  Clock, AlertTriangle, User as UserIcon, LogOut,
   Coffee, ShoppingBag, PlusSquare, Tent, Search, Loader
 } from 'lucide-react';
 
@@ -133,7 +133,7 @@ function LocationPicker({ value, onChange, placeholder }) {
         onClick={() => { setOpen(o => !o); setQuery(''); }}
         style={{
           width: '100%', padding: '14px 16px', borderRadius: '12px',
-          background: 'rgba(255,255,255,0.06)', border: `1px solid ${open ? '#7f77dd' : 'rgba(255,255,255,0.12)'}`,
+          background: 'rgba(255,255,255,0.06)', border: `1px solid ${open ? '#10B981' : 'rgba(255,255,255,0.12)'}`,
           color: selectedLabel ? 'white' : '#64748b', fontSize: '0.95rem',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           cursor: 'pointer', outline: 'none', transition: 'border 0.2s',
@@ -176,16 +176,16 @@ function LocationPicker({ value, onChange, placeholder }) {
             )}
             {filtered.map(g => (
               <div key={g.group}>
-                <p style={{ margin: 0, padding: '8px 14px 4px', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', color: '#7f77dd', fontWeight: 'bold' }}>{g.group}</p>
+                <p style={{ margin: 0, padding: '8px 14px 4px', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', color: '#10B981', fontWeight: 'bold' }}>{g.group}</p>
                 {g.items.map(item => (
                   <div
                     key={item}
                     onClick={() => { onChange(item); setOpen(false); }}
                     style={{
                       padding: '11px 16px', cursor: 'pointer', fontSize: '0.93rem',
-                      color: item === value ? '#a39dfa' : 'white',
+                      color: item === value ? '#34D399' : 'white',
                       background: item === value ? 'rgba(127,119,221,0.15)' : 'transparent',
-                      borderLeft: item === value ? '3px solid #7f77dd' : '3px solid transparent',
+                      borderLeft: item === value ? '3px solid #10B981' : '3px solid transparent',
                       transition: 'background 0.15s'
                     }}
                     onMouseEnter={e => { if (item !== value) e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
@@ -204,7 +204,20 @@ function LocationPicker({ value, onChange, placeholder }) {
 }
 
 
+import { useAuth } from '../contexts/AuthContext';
+
 export default function DirectionsScreen() {
+  const { user, logout } = useAuth();
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = React.useRef(null);
+
+  // Close profile dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => { if (profileRef.current && !profileRef.current.contains(e.target)) setProfileOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
   const locationState = (typeof window !== 'undefined' && window.history.state?.usr) || {};
   const [activeTab, setActiveTab] = useState('inside');
 
@@ -392,7 +405,50 @@ export default function DirectionsScreen() {
         top: 0, 
         zIndex: 10 
       }}>
-        <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold' }}>Find Your Way</h1>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            {/* Profile Trigger */}
+            <div 
+              ref={profileRef}
+              onClick={() => setProfileOpen(!profileOpen)}
+              style={{ 
+                width: '38px', height: '38px', borderRadius: '12px', 
+                background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', position: 'relative'
+              }}
+            >
+              {user?.photoURL ? (
+                <img src={user.photoURL} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '11px' }} />
+              ) : (
+                <UserIcon size={18} color="#10B981" />
+              )}
+              
+              {profileOpen && (
+                <div style={{ 
+                  position: 'absolute', top: 'calc(100% + 12px)', left: 0, 
+                  background: '#010409', border: '1px solid #10B981', 
+                  borderRadius: '12px', padding: '8px', width: '140px',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.8)', zIndex: 200,
+                  animation: 'fadeIn 0.2s'
+                }}>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); logout(); }}
+                    style={{ 
+                      width: '100%', padding: '10px', background: 'rgba(239, 68, 68, 0.1)', 
+                      border: 'none', borderRadius: '8px', color: '#ff4d4d', 
+                      fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', 
+                      alignItems: 'center', gap: '8px', cursor: 'pointer' 
+                    }}
+                  >
+                    <LogOut size={14} /> Logout
+                  </button>
+                </div>
+              )}
+            </div>
+            <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold' }}>Find Your Way</h1>
+          </div>
+        </div>
         <div 
           role="tablist"
           aria-label="Navigation modes"
@@ -403,7 +459,7 @@ export default function DirectionsScreen() {
             role="tab"
             aria-selected={activeTab === 'inside'}
             aria-label="Directions inside the stadium"
-            style={{ flex: 1, padding: '10px', borderRadius: '8px', border: 'none', background: activeTab === 'inside' ? '#7f77dd' : 'transparent', color: activeTab === 'inside' ? 'white' : '#94a3b8', fontWeight: 'bold', transition: 'all 0.3s' }}
+            style={{ flex: 1, padding: '10px', borderRadius: '8px', border: 'none', background: activeTab === 'inside' ? '#10B981' : 'transparent', color: activeTab === 'inside' ? 'white' : '#94a3b8', fontWeight: 'bold', transition: 'all 0.3s' }}
           >
             Inside Stadium
           </button>
@@ -412,7 +468,7 @@ export default function DirectionsScreen() {
             role="tab"
             aria-selected={activeTab === 'travel'}
             aria-label="Travel planner to and from the stadium"
-            style={{ flex: 1, padding: '10px', borderRadius: '8px', border: 'none', background: activeTab === 'travel' ? '#7f77dd' : 'transparent', color: activeTab === 'travel' ? 'white' : '#94a3b8', fontWeight: 'bold', transition: 'all 0.3s' }}
+            style={{ flex: 1, padding: '10px', borderRadius: '8px', border: 'none', background: activeTab === 'travel' ? '#10B981' : 'transparent', color: activeTab === 'travel' ? 'white' : '#94a3b8', fontWeight: 'bold', transition: 'all 0.3s' }}
           >
             Travel Planner
           </button>
@@ -446,10 +502,10 @@ export default function DirectionsScreen() {
                       background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)',
                       borderRadius: '16px', color: 'white', whiteSpace: 'nowrap',
                       boxShadow: toLoc === s.dest ? '0 0 15px rgba(127,119,221,0.2)' : 'none',
-                      borderColor: toLoc === s.dest ? '#7f77dd' : 'rgba(255,255,255,0.08)'
+                      borderColor: toLoc === s.dest ? '#10B981' : 'rgba(255,255,255,0.08)'
                     }}
                   >
-                    <span style={{ color: '#7f77dd' }}>{s.icon}</span> {s.label}
+                    <span style={{ color: '#10B981' }}>{s.icon}</span> {s.label}
                   </button>
                 ))}
               </div>
@@ -468,7 +524,7 @@ export default function DirectionsScreen() {
               <div aria-hidden="true" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.06)' }} />
                 <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(127,119,221,0.15)', border: '1px solid rgba(127,119,221,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Navigation size={13} color="#a39dfa" />
+                  <Navigation size={13} color="#34D399" />
                 </div>
                 <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.06)' }} />
               </div>
@@ -485,7 +541,7 @@ export default function DirectionsScreen() {
               aria-label={aiLoading ? "Calculating AI Route" : "Get AI Directions"}
               style={{
                 width: '100%', padding: '14px', borderRadius: '14px', border: 'none',
-                background: (aiLoading || !fromLoc || !toLoc || fromLoc === toLoc) ? 'rgba(127,119,221,0.15)' : 'linear-gradient(135deg, #7f77dd, #a39dfa)',
+                background: (aiLoading || !fromLoc || !toLoc || fromLoc === toLoc) ? 'rgba(127,119,221,0.15)' : 'linear-gradient(135deg, #10B981, #34D399)',
                 color: (aiLoading || !fromLoc || !toLoc || fromLoc === toLoc) ? '#64748b' : 'white', 
                 fontWeight: '700', fontSize: '1rem', 
                 cursor: aiLoading ? 'wait' : (!fromLoc || !toLoc || fromLoc === toLoc) ? 'not-allowed' : 'pointer',
@@ -509,7 +565,7 @@ export default function DirectionsScreen() {
                 aria-label="Route details"
               >
                 <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
-                  <span aria-label={`Estimated time: ${(aiRoute || getHeuristicRoute())?.time}`} style={{ padding: '6px 12px', background: 'rgba(127,119,221,0.2)', color: '#a39dfa', borderRadius: '8px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={14}/> {(aiRoute || getHeuristicRoute())?.time}</span>
+                  <span aria-label={`Estimated time: ${(aiRoute || getHeuristicRoute())?.time}`} style={{ padding: '6px 12px', background: 'rgba(127,119,221,0.2)', color: '#34D399', borderRadius: '8px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={14}/> {(aiRoute || getHeuristicRoute())?.time}</span>
                   <span aria-label={`Distance: ${(aiRoute || getHeuristicRoute())?.dist}`} style={{ padding: '6px 12px', background: 'rgba(255,255,255,0.05)', color: '#cbd5e1', borderRadius: '8px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}><Navigation size={14}/> {(aiRoute || getHeuristicRoute())?.dist}</span>
                 </div>
 
@@ -522,9 +578,9 @@ export default function DirectionsScreen() {
                     <div 
                       key={idx} 
                       role="listitem"
-                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderLeft: '4px solid #7f77dd', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}
+                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderLeft: '4px solid #10B981', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}
                     >
-                      <div aria-hidden="true" style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(127,119,221,0.2)', color: '#a39dfa', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', flexShrink: 0 }}>{idx + 1}</div>
+                      <div aria-hidden="true" style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(127,119,221,0.2)', color: '#34D399', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', flexShrink: 0 }}>{idx + 1}</div>
                       <p style={{ margin: 0, color: 'white', lineHeight: '1.5' }}>{step}</p>
                     </div>
                   ))}
@@ -568,7 +624,7 @@ export default function DirectionsScreen() {
                     {/* Render origin node */}
                     {fromPos && (
                       <g>
-                        <circle cx={fromPos.x} cy={fromPos.y} r="8" fill="#7f77dd" stroke="#080c14" strokeWidth="2" style={{ animation: 'pulse 2s infinite' }} />
+                        <circle cx={fromPos.x} cy={fromPos.y} r="8" fill="#10B981" stroke="#080c14" strokeWidth="2" style={{ animation: 'pulse 2s infinite' }} />
                         <text x={fromPos.x} y={fromPos.y - 12} fill="#94a3b8" fontSize="10" textAnchor="middle">{fromPos.label} (You)</text>
                       </g>
                     )}
@@ -600,8 +656,8 @@ export default function DirectionsScreen() {
             {/* Input & Context */}
             <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
-                <button onClick={() => setDirection('arriving')} style={{ flex: 1, padding: '10px', background: direction === 'arriving' ? 'rgba(127,119,221,0.2)' : 'transparent', color: direction === 'arriving' ? '#a39dfa' : '#94a3b8', border: '1px solid', borderColor: direction === 'arriving' ? '#7f77dd' : 'rgba(255,255,255,0.1)', borderRadius: '8px 0 0 8px' }}>Home ➔ Stadium</button>
-                <button onClick={() => setDirection('departing')} style={{ flex: 1, padding: '10px', background: direction === 'departing' ? 'rgba(127,119,221,0.2)' : 'transparent', color: direction === 'departing' ? '#a39dfa' : '#94a3b8', border: '1px solid', borderColor: direction === 'departing' ? '#7f77dd' : 'rgba(255,255,255,0.1)', borderRadius: '0 8px 8px 0' }}>Stadium ➔ Home</button>
+                <button onClick={() => setDirection('arriving')} style={{ flex: 1, padding: '10px', background: direction === 'arriving' ? 'rgba(127,119,221,0.2)' : 'transparent', color: direction === 'arriving' ? '#34D399' : '#94a3b8', border: '1px solid', borderColor: direction === 'arriving' ? '#10B981' : 'rgba(255,255,255,0.1)', borderRadius: '8px 0 0 8px' }}>Home ➔ Stadium</button>
+                <button onClick={() => setDirection('departing')} style={{ flex: 1, padding: '10px', background: direction === 'departing' ? 'rgba(127,119,221,0.2)' : 'transparent', color: direction === 'departing' ? '#34D399' : '#94a3b8', border: '1px solid', borderColor: direction === 'departing' ? '#10B981' : 'rgba(255,255,255,0.1)', borderRadius: '0 8px 8px 0' }}>Stadium ➔ Home</button>
               </div>
               <p style={{ color: '#cbd5e1', fontSize: '0.85rem', marginBottom: '16px', textAlign: 'center' }}>
                 <Clock size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }}/> 
@@ -657,7 +713,7 @@ export default function DirectionsScreen() {
 
             {/* Live Route Results */}
             {liveLoading && (
-              <div style={{ textAlign: 'center', padding: '32px', color: '#a39dfa' }}>
+              <div style={{ textAlign: 'center', padding: '32px', color: '#34D399' }}>
                 <Loader size={32} style={{ animation: 'spin 1s linear infinite', margin: '0 auto 12px' }} />
                 <p style={{ margin: 0, color: '#94a3b8' }}>Fetching live routes from Google...</p>
               </div>
@@ -672,11 +728,11 @@ export default function DirectionsScreen() {
             {liveRoutes && (
               <div style={{ animation: 'fadeIn 0.5s' }}>
                 <div style={{ background: 'rgba(127,119,221,0.08)', border: '1px solid rgba(127,119,221,0.2)', borderRadius: '16px', padding: '20px', marginBottom: '16px' }}>
-                  <h3 style={{ color: '#a39dfa', margin: '0 0 12px', fontSize: '1rem' }}>
+                  <h3 style={{ color: '#34D399', margin: '0 0 12px', fontSize: '1rem' }}>
                     🗺️ Live Route: {areaSearched} {direction === 'arriving' ? '→ Stadium' : '← Stadium'}
                   </h3>
                   <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                    <span style={{ padding: '6px 12px', background: 'rgba(127,119,221,0.2)', color: '#a39dfa', borderRadius: '8px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={14}/> {liveRoutes.duration}</span>
+                    <span style={{ padding: '6px 12px', background: 'rgba(127,119,221,0.2)', color: '#34D399', borderRadius: '8px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={14}/> {liveRoutes.duration}</span>
                     <span style={{ padding: '6px 12px', background: 'rgba(255,255,255,0.05)', color: '#cbd5e1', borderRadius: '8px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}><Navigation size={14}/> {liveRoutes.distance}</span>
                     <span style={{ padding: '4px 8px', background: 'rgba(6,182,212,0.15)', color: '#67e8f9', borderRadius: '6px', fontSize: '0.75rem' }}>Powered by Google</span>
                   </div>
@@ -712,10 +768,10 @@ export default function DirectionsScreen() {
                         <h4 style={{ margin: 0, color: 'white' }}>{brand} Cab</h4>
                         <div style={{ display: 'flex', gap: '12px', marginTop: '6px' }}>
                           <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{time}</span>
-                          <span style={{ color: '#a39dfa', fontSize: '0.85rem', fontWeight: 'bold' }}>{cost}</span>
+                          <span style={{ color: '#34D399', fontSize: '0.85rem', fontWeight: 'bold' }}>{cost}</span>
                         </div>
                       </div>
-                      <a href={`https://${brand === 'Uber' ? 'm.uber.com' : 'book.olacabs.com'}`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', background: '#7f77dd', color: 'white', padding: '10px 16px', borderRadius: '8px', fontWeight: '600', fontSize: '0.9rem', boxShadow: '0 4px 12px rgba(127,119,221,0.3)' }}>
+                      <a href={`https://${brand === 'Uber' ? 'm.uber.com' : 'book.olacabs.com'}`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', background: '#10B981', color: 'white', padding: '10px 16px', borderRadius: '8px', fontWeight: '600', fontSize: '0.9rem', boxShadow: '0 4px 12px rgba(127,119,221,0.3)' }}>
                         Book
                       </a>
                     </div>
@@ -728,10 +784,10 @@ export default function DirectionsScreen() {
                   <div style={{ flex: 1 }}>
                     <h4 style={{ margin: 0, color: 'white' }}>Rapido Bike</h4>
                     <div style={{ display: 'flex', gap: '12px', marginTop: '6px' }}>
-                      <span style={{ color: '#a39dfa', fontSize: '0.85rem', fontWeight: 'bold' }}>{transportStats ? transportStats.bike : '₹--'}</span>
+                      <span style={{ color: '#34D399', fontSize: '0.85rem', fontWeight: 'bold' }}>{transportStats ? transportStats.bike : '₹--'}</span>
                     </div>
                   </div>
-                  <a href="#" style={{ textDecoration: 'none', background: '#7f77dd', color: 'white', padding: '10px 16px', borderRadius: '8px', fontWeight: '600', fontSize: '0.9rem' }}>Book</a>
+                  <a href="#" style={{ textDecoration: 'none', background: '#10B981', color: 'white', padding: '10px 16px', borderRadius: '8px', fontWeight: '600', fontSize: '0.9rem' }}>Book</a>
                 </div>
 
                 <div style={{ background: 'rgba(255,255,255,0.03)', border: transportStats?.auto === 'Unavailable' ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -743,7 +799,7 @@ export default function DirectionsScreen() {
                     </div>
                     {transportStats?.auto !== 'Unavailable' && (
                       <div style={{ display: 'flex', gap: '12px', marginTop: '6px' }}>
-                        <span style={{ color: '#a39dfa', fontSize: '0.85rem', fontWeight: 'bold' }}>{transportStats ? transportStats.auto : '₹--'}</span>
+                        <span style={{ color: '#34D399', fontSize: '0.85rem', fontWeight: 'bold' }}>{transportStats ? transportStats.auto : '₹--'}</span>
                       </div>
                     )}
                   </div>
@@ -751,38 +807,106 @@ export default function DirectionsScreen() {
               </div>
             </div>
 
-            {/* Public Transport Cards */}
+            {/* Public Transit Dashboard */}
             <div>
-              <h3 style={{ textTransform: 'uppercase', letterSpacing: '1px', color: '#94a3b8', fontSize: '0.75rem', marginBottom: '12px' }}>Public Transit</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <h3 style={{ textTransform: 'uppercase', letterSpacing: '1px', color: '#94a3b8', fontSize: '0.75rem', marginBottom: '16px' }}>Transit Hub (Live Board)</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 
-                <div style={{ background: 'rgba(14, 165, 233, 0.05)', border: '1px solid rgba(14, 165, 233, 0.2)', borderRadius: '16px', padding: '16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
-                    <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(14, 165, 233, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Train color="#0ea5e9" /></div>
-                    <div style={{ flex: 1 }}>
-                      <h4 style={{ margin: 0, color: 'white' }}>Local Train</h4>
-                      <p style={{ margin: '4px 0 0 0', color: '#94a3b8', fontSize: '0.85rem' }}>Fare: ₹5-15</p>
+                {/* Local Train Dashboard */}
+                <div style={{ 
+                  background: 'rgba(1, 4, 9, 0.6)', 
+                  border: '1px solid rgba(16, 185, 129, 0.2)', 
+                  borderRadius: '20px', 
+                  padding: '20px',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{ position: 'absolute', top: 0, right: 0, padding: '8px 12px', background: 'rgba(16, 185, 129, 0.1)', borderBottomLeftRadius: '12px', fontSize: '0.65rem', color: '#10B981', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', animation: 'pulse 1.5s infinite' }} /> LIVE UPDATES
+                  </div>
+                  
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                    <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Train color="#10B981" size={22} />
+                    </div>
+                    <div>
+                      <h4 style={{ margin: 0, color: 'white', fontSize: '1.1rem' }}>Western Line Local</h4>
+                      <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.75rem' }}>Western Railway Section</p>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '16px' }}>
-                    <span style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', padding: '4px 8px', borderRadius: '6px', fontSize: '0.75rem', color: '#cbd5e1' }}>Marine Lines (0.9km)</span>
-                    <span style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', padding: '4px 8px', borderRadius: '6px', fontSize: '0.75rem', color: '#cbd5e1' }}>Churchgate (1.8km)</span>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {[
+                      { station: 'Marine Lines', distance: '0.9km', time: 'In 4 mins', platform: 'P2', status: 'On Time', capacity: 'High' },
+                      { station: 'Churchgate', distance: '1.8km', time: 'In 9 mins', platform: 'P4', status: 'Exp. Delay', capacity: 'Normal' }
+                    ].map((train, i) => (
+                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px', background: 'rgba(255,255,255,0.03)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ color: 'white', fontWeight: '700', fontSize: '0.95rem' }}>{train.station}</span>
+                            <span style={{ fontSize: '0.65rem', color: '#94a3b8', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>{train.distance}</span>
+                          </div>
+                          <div style={{ marginTop: '4px', fontSize: '0.72rem', color: train.status === 'On Time' ? '#10B981' : '#f59e0b', fontWeight: '600' }}>
+                            {train.status} • Platform {train.platform}
+                          </div>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <div style={{ color: '#10B981', fontWeight: '900', fontSize: '1.1rem' }}>{train.time}</div>
+                          <div style={{ fontSize: '0.6rem', color: '#94a3b8', textTransform: 'uppercase' }}>{train.capacity} LOAD</div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <a href="https://maps.google.com/?q=Marine+Lines+Railway+Station" target="_blank" rel="noopener noreferrer" style={{ display: 'block', textAlign: 'center', textDecoration: 'none', background: 'rgba(14, 165, 233, 0.2)', color: '#0ea5e9', padding: '10px 16px', borderRadius: '8px', fontWeight: '600', fontSize: '0.9rem' }}>View on Google Maps</a>
+                  <a href="https://maps.google.com/?q=Marine+Lines+Railway+Station" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '16px', textDecoration: 'none', background: 'rgba(16, 185, 129, 0.1)', color: '#10B981', padding: '12px', borderRadius: '12px', fontWeight: '700', fontSize: '0.85rem', transition: 'all 0.2s' }}>
+                    <MapPin size={14} /> View Station Access Maps
+                  </a>
                 </div>
 
-                <div style={{ background: 'rgba(14, 165, 233, 0.05)', border: '1px solid rgba(14, 165, 233, 0.2)', borderRadius: '16px', padding: '16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
-                    <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(14, 165, 233, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Bus color="#0ea5e9" /></div>
-                    <div style={{ flex: 1 }}>
-                      <h4 style={{ margin: 0, color: 'white' }}>BEST Bus</h4>
-                      <p style={{ margin: '4px 0 0 0', color: '#94a3b8', fontSize: '0.85rem' }}>Fare: ₹10-25</p>
+                {/* BEST Bus Monitor */}
+                <div style={{ 
+                  background: 'rgba(1, 4, 9, 0.6)', 
+                  border: '1px solid rgba(16, 185, 129, 0.2)', 
+                  borderRadius: '20px', 
+                  padding: '20px',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+                  position: 'relative'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                    <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Bus color="#10B981" size={22} />
+                    </div>
+                    <div>
+                      <h4 style={{ margin: 0, color: 'white', fontSize: '1.1rem' }}>BEST Bus Monitor</h4>
+                      <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.75rem' }}>Stadium Specialized Routes</p>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '16px' }}>
-                    <span style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', padding: '4px 8px', borderRadius: '6px', fontSize: '0.75rem', color: '#cbd5e1' }}>Routes: 132, 132 Ltd, C-59</span>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    {[
+                      { route: '132', time: 'Arriving', status: 'Blinking', next: '6m' },
+                      { route: '123', time: '3 mins', status: 'Ready', next: '12m' }
+                    ].map((bus, i) => (
+                      <div key={i} style={{ padding: '16px', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.06)', position: 'relative' }}>
+                        <div style={{ fontSize: '0.65rem', color: '#94a3b8', marginBottom: '4px' }}>ROUTE</div>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '8px' }}>
+                          <span style={{ fontSize: '1.4rem', fontWeight: '900', color: 'white' }}>{bus.route}</span>
+                          <span style={{ fontSize: '0.65rem', color: '#10B981', fontWeight: 'bold' }}>LTD</span>
+                        </div>
+                        <div style={{ fontSize: '0.9rem', fontWeight: '800', color: bus.status === 'Blinking' ? '#10B981' : '#34D399', animation: bus.status === 'Blinking' ? 'pulse 1s infinite' : 'none' }}>
+                          {bus.time}
+                        </div>
+                        <div style={{ marginTop: '12px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.05)', fontSize: '0.65rem', color: '#64748b' }}>
+                          NEXT: {bus.next}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <button style={{ width: '100%', border: 'none', background: 'rgba(14, 165, 233, 0.2)', color: '#0ea5e9', padding: '10px 16px', borderRadius: '8px', fontWeight: '600', fontSize: '0.9rem' }}>View Routes</button>
+                  
+                  <div style={{ marginTop: '16px', padding: '10px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: '12px', fontSize: '0.72rem', color: '#fbbf24', display: 'flex', gap: '8px' }}>
+                    <AlertTriangle size={14} style={{ flexShrink: 0 }} />
+                    Post-match traffic may divert Route 132. Check app for live detour maps.
+                  </div>
                 </div>
 
               </div>
@@ -799,21 +923,21 @@ export default function DirectionsScreen() {
                   <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px' }}>
                     <span style={{ color: 'white', fontSize: '0.9rem' }}>Azad Maidan Parking</span>
                     <div style={{ textAlign: 'right' }}>
-                      <span style={{ display: 'block', color: '#a39dfa', fontWeight: 'bold', fontSize: '0.9rem' }}>₹50/hr</span>
+                      <span style={{ display: 'block', color: '#34D399', fontWeight: 'bold', fontSize: '0.9rem' }}>₹50/hr</span>
                       <span style={{ display: 'block', color: '#94a3b8', fontSize: '0.75rem' }}>0.4km walk</span>
                     </div>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px' }}>
                     <span style={{ color: 'white', fontSize: '0.9rem' }}>Cross Maidan Info</span>
                     <div style={{ textAlign: 'right' }}>
-                      <span style={{ display: 'block', color: '#a39dfa', fontWeight: 'bold', fontSize: '0.9rem' }}>₹40/hr</span>
+                      <span style={{ display: 'block', color: '#34D399', fontWeight: 'bold', fontSize: '0.9rem' }}>₹40/hr</span>
                       <span style={{ display: 'block', color: '#94a3b8', fontSize: '0.75rem' }}>0.6km walk</span>
                     </div>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ color: 'white', fontSize: '0.9rem' }}>Marine Lines Lot</span>
                     <div style={{ textAlign: 'right' }}>
-                      <span style={{ display: 'block', color: '#a39dfa', fontWeight: 'bold', fontSize: '0.9rem' }}>₹60/hr</span>
+                      <span style={{ display: 'block', color: '#34D399', fontWeight: 'bold', fontSize: '0.9rem' }}>₹60/hr</span>
                       <span style={{ display: 'block', color: '#94a3b8', fontSize: '0.75rem' }}>1.2km walk</span>
                     </div>
                   </div>

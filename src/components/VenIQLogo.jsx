@@ -9,17 +9,17 @@ export default function VenIQLogo({ size = 48, className = '' }) {
       fill="none" 
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      style={{ filter: 'drop-shadow(0px 8px 16px rgba(127, 119, 221, 0.4))' }}
+      style={{ filter: 'drop-shadow(0px 8px 16px rgba(16, 185, 129, 0.4))' }}
     >
       <defs>
         <linearGradient id="veniq-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#4f46e5" />
-          <stop offset="50%" stopColor="#7f77dd" />
+          <stop offset="0%" stopColor="#064E3B" />
+          <stop offset="50%" stopColor="#10B981" />
           <stop offset="100%" stopColor="#06b6d4" />
         </linearGradient>
         <linearGradient id="veniq-pin-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#a39dfa" />
-          <stop offset="100%" stopColor="#4f46e5" />
+          <stop offset="0%" stopColor="#34D399" />
+          <stop offset="100%" stopColor="#064E3B" />
         </linearGradient>
         <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="4" result="blur" />

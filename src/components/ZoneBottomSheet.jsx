@@ -39,7 +39,7 @@ function SeatingChart({ rows, blockName, highlightSeat }) {
           gap: '6px',
           animation: 'fadeIn 0.1s ease-out'
         }}>
-          <span style={{ color: '#a39dfa' }}>Row {hoveredSeat.row}</span>
+          <span style={{ color: '#34D399' }}>Row {hoveredSeat.row}</span>
           <div style={{ width: '1px', height: '10px', background: 'rgba(255,255,255,0.2)' }} />
           <span>Seat {hoveredSeat.no}</span>
         </div>
@@ -94,7 +94,7 @@ function SeatingChart({ rows, blockName, highlightSeat }) {
                     width="10"
                     height="10"
                     rx="2"
-                    fill={isHighlighted ? "#facc15" : "rgba(127, 119, 221, 0.4)"}
+                    fill={isHighlighted ? "#facc15" : "rgba(16, 185, 129, 0.4)"}
                     stroke={isHighlighted ? "#fff" : "rgba(255, 255, 255, 0.2)"}
                     strokeWidth={isHighlighted ? "1.2" : "0.6"}
                     filter={isHighlighted ? "drop-shadow(0 0 6px rgba(250, 204, 21, 0.9))" : "url(#blockShadow)"}
@@ -124,7 +124,7 @@ function SeatingChart({ rows, blockName, highlightSeat }) {
                       });
 
                       if(!isHighlighted) {
-                        e.currentTarget.style.fill = '#a39dfa'; 
+                        e.currentTarget.style.fill = '#34D399'; 
                         e.currentTarget.style.stroke = '#fff'; 
                         e.currentTarget.style.transform = 'translateY(-1px)'; 
                       }
@@ -132,7 +132,7 @@ function SeatingChart({ rows, blockName, highlightSeat }) {
                     onMouseLeave={(e) => { 
                       setHoveredSeat(null);
                       if(!isHighlighted){
-                        e.currentTarget.style.fill = 'rgba(127, 119, 221, 0.4)'; 
+                        e.currentTarget.style.fill = 'rgba(16, 185, 129, 0.4)'; 
                         e.currentTarget.style.stroke = 'rgba(255, 255, 255, 0.2)'; 
                         e.currentTarget.style.transform = 'translateY(0)'; 
                       }
@@ -175,10 +175,10 @@ function RouteHereButton({ zoneName }) {
       aria-label={`Get directions to ${zoneName}`}
       style={{
         width: '100%', padding: '16px', borderRadius: '16px',
-        background: 'linear-gradient(135deg, #7f77dd 0%, #a39dfa 100%)',
+        background: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
         color: 'white', fontWeight: 'bold', fontSize: '1rem',
         display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px',
-        boxShadow: '0 4px 15px rgba(127, 119, 221, 0.4)',
+        boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)',
         border: 'none', cursor: 'pointer', transition: 'opacity 0.2s'
       }}
       onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
@@ -225,7 +225,7 @@ export default function ZoneBottomSheet({ selectedZone, match, onClose, highligh
       case 'red': return '#ef4444';
       case 'amber': return '#f59e0b';
       case 'green': return '#10b981';
-      default: return '#7f77dd';
+      default: return '#10B981';
     }
   };
 
@@ -340,7 +340,7 @@ export default function ZoneBottomSheet({ selectedZone, match, onClose, highligh
                       width: '56px', height: '56px', borderRadius: '16px',
                       background: 'rgba(163, 157, 250, 0.1)',
                       display: 'flex', justifyContent: 'center', alignItems: 'center',
-                      color: '#a39dfa',
+                      color: '#34D399',
                       boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
                     }}>
                       <Store size={28} />
@@ -381,9 +381,9 @@ export default function ZoneBottomSheet({ selectedZone, match, onClose, highligh
                   >
                     <div style={{
                       width: '56px', height: '56px', borderRadius: '16px',
-                      background: 'rgba(127, 119, 221, 0.1)',
+                      background: 'rgba(16, 185, 129, 0.1)',
                       display: 'flex', justifyContent: 'center', alignItems: 'center',
-                      color: '#a39dfa',
+                      color: '#34D399',
                       boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
                     }}>
                       <Users size={28} />
@@ -405,7 +405,7 @@ export default function ZoneBottomSheet({ selectedZone, match, onClose, highligh
                     width: '64px', height: '64px', borderRadius: '16px',
                     background: 'rgba(163, 157, 250, 0.1)',
                     display: 'flex', justifyContent: 'center', alignItems: 'center',
-                    color: '#a39dfa', flexShrink: 0,
+                    color: '#34D399', flexShrink: 0,
                     boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
                     border: '1px solid rgba(163, 157, 250, 0.2)'
                   }}>
@@ -454,9 +454,9 @@ export default function ZoneBottomSheet({ selectedZone, match, onClose, highligh
                 }}>
                   <div style={{
                     width: '56px', height: '56px', borderRadius: '16px',
-                    background: 'rgba(127, 119, 221, 0.1)',
+                    background: 'rgba(16, 185, 129, 0.1)',
                     display: 'flex', justifyContent: 'center', alignItems: 'center',
-                    color: '#7f77dd', flexShrink: 0
+                    color: '#10B981', flexShrink: 0
                   }}>
                     <MapPin size={28} />
                   </div>
@@ -470,7 +470,7 @@ export default function ZoneBottomSheet({ selectedZone, match, onClose, highligh
 
                 <div id="seat-layout-view" style={{ marginBottom: '24px' }}>
                   <h3 style={{ fontSize: '1rem', color: 'white', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Users size={18} style={{ color: '#7f77dd' }} /> Actual Seat Layout
+                    <Users size={18} style={{ color: '#10B981' }} /> Actual Seat Layout
                   </h3>
                   <p style={{ color: '#94a3b8', fontSize: '0.8rem', margin: '0 0 16px 0' }}>
                     Detailed level-wise seat arrangement for {selectedZone.name}
