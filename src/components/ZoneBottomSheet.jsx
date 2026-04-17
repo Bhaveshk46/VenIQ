@@ -272,12 +272,8 @@ export default function ZoneBottomSheet({ selectedZone, match, onClose, highligh
       color: 'white',
       overflow: 'hidden'
     }}>
-      {selectedZone ? (
-        <>
-          {/* Entire existing content wrapped in selectedZone check */}
-
-          {/* Sticky Header */}
-          <div style={{
+      {/* Sticky Header */}
+      <div style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             padding: '24px', borderBottom: (isShopGroup || isSeatBlock || hasSubSelection) ? '1px solid rgba(255,255,255,0.05)' : 'none',
             flexShrink: 0
