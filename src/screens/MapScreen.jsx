@@ -300,10 +300,12 @@ export default function MapScreen() {
           </div>
         )}
 
-        {/* Info Area */}
-        <div className={`info-section ${selectedZone ? 'active' : ''}`}>
-          <ZoneBottomSheet selectedZone={selectedZone} match={matchData} onClose={() => { setSelectedZone(null); setHighlightSeat(null); }} highlightSeat={highlightSeat} />
-        </div>
+        {/* Info Area - Only rendered when a zone is selected to prevent extra empty space */}
+        {selectedZone && (
+          <div className="info-section active">
+            <ZoneBottomSheet selectedZone={selectedZone} match={matchData} onClose={() => { setSelectedZone(null); setHighlightSeat(null); }} highlightSeat={highlightSeat} />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -570,12 +570,6 @@ export default function ZoneBottomSheet({ selectedZone, match, onClose, highligh
             )}
           </div>
 
-        </>
-      ) : (
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', padding: '40px', textAlign: 'center' }}>
-          <p>Select a zone or marker on the map to view detailed information, crowd levels, and seating charts.</p>
-        </div>
-      )}
     </div>
   );
 }
