@@ -89,15 +89,24 @@ button {
 
 /* Custom Scrollbar for sleek look */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
   height: 4px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 10px;
+}
+
+/* Hide scrollbar for mobile browsers to keep it clean */
+@media (max-width: 767px) {
+  ::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
 }
 
 /* Titles */
@@ -269,7 +278,8 @@ h1, h2, h3, h4 {
   }
 
   .map-section {
-    min-height: 55vh; /* Balanced for stacking view */
+    min-height: auto; /* Remove fixed height to eliminate gap */
+    padding-bottom: 20px;
     flex: none;
   }
 
