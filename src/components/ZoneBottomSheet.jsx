@@ -88,6 +88,7 @@ function SeatingChart({ rows, blockName, highlightSeat }) {
 
                 return (
                   <rect
+                    id={isHighlighted ? "highlighted-seat" : undefined}
                     key={`${rowName}-${seatIndex}`}
                     x={x}
                     y={y}
@@ -206,10 +207,14 @@ export default function ZoneBottomSheet({ selectedZone, match, onClose, highligh
         const groupToSelect = SEATING_GROUPS.find(g => g.id === highlightSeat.tierId);
         if (groupToSelect) {
           setSelectedRowGroup(groupToSelect);
-          // Wait for DOM to render the SeatingChart, then scroll to bottom sheet content
+          // Wait for DOM to render the SeatingChart, then scroll to highlighted seat
           setTimeout(() => {
+            const highlightedSeat = document.getElementById('highlighted-seat');
             const chartDiv = document.getElementById('seat-layout-view');
-            if (chartDiv) {
+            
+            if (highlightedSeat) {
+               highlightedSeat.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else if (chartDiv) {
                chartDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
           }, 300);
