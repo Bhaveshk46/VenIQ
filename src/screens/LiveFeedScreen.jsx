@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { onValue } from 'firebase/database';
-import { feedRef } from '../../services/firebase';
+import { onValue, feedRef } from '../../services/firebase';
 import { Activity, Clock, AlertCircle } from 'lucide-react';
 
 export default function LiveFeedScreen() {

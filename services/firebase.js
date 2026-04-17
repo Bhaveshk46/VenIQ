@@ -1,140 +1,56 @@
-import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, set, onValue, push, get } from 'firebase/database';
-import { 
-  getAuth, 
-  signOut, 
-  onAuthStateChanged,
-  GoogleAuthProvider,
-  signInWithPopup,
-  sendSignInLinkToEmail,
-  isSignInWithEmailLink,
-  signInWithEmailLink,
-  setPersistence,
-  browserLocalPersistence,
-  signInWithRedirect
-} from 'firebase/auth';
+// Firebase has been temporarily removed.
+// All exports are mocked to allow the app to function without it.
 
-const MOBILE_REDIRECT_TIMEOUT_MS = 5000;
+export const app = {};
+export const auth = {};
+export const db = {};
+export const isFirebaseReady = true;
+export const firebaseDiagnostics = { mode: 'mock' };
 
-const getFirebaseEnv = (viteKey, expoKey) => {
-  const value = import.meta.env[viteKey] || import.meta.env[expoKey];
-  return typeof value === 'string' ? value.trim() : value;
-};
+export const bootstrapAuthSession = async () => ({
+  uid: 'mock-user-123',
+  displayName: 'Mock User',
+  email: 'mock@example.com'
+});
 
-const firebaseConfig = {
-  apiKey: getFirebaseEnv('VITE_FIREBASE_API_KEY', 'EXPO_PUBLIC_FIREBASE_API_KEY'),
-  authDomain: getFirebaseEnv('VITE_FIREBASE_AUTH_DOMAIN', 'EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN'),
-  databaseURL: getFirebaseEnv('VITE_FIREBASE_DATABASE_URL', 'EXPO_PUBLIC_FIREBASE_DATABASE_URL'),
-  projectId: getFirebaseEnv('VITE_FIREBASE_PROJECT_ID', 'EXPO_PUBLIC_FIREBASE_PROJECT_ID'),
-};
+export const crowdLevelsRef = 'crowdLevels';
+export const matchRef = 'match';
+export const feedRef = 'feed';
 
-// Initialize Firebase services with descriptive diagnostics to help debug deployment (Cloud Run)
-let firebaseApp = null;
-let firebaseAuth = null;
-let firebaseDb = null;
-let firebaseInitError = null;
-let authBootstrapPromise = null;
+export const googleProvider = {};
 
-const isPlaceholder = (val) => !val || val === 'replace_in_gcp_console' || val.includes('your_');
+export const set = async () => {};
+export const ref = () => {};
+export const get = async () => ({ val: () => null });
+export const push = async () => {};
+export const signOut = async () => {};
 
-if (
-  firebaseConfig.apiKey &&
-  firebaseConfig.projectId &&
-  firebaseConfig.authDomain &&
-  !isPlaceholder(firebaseConfig.apiKey)
-) {
-  try {
-    firebaseApp = initializeApp(firebaseConfig);
-    firebaseAuth = getAuth(firebaseApp);
-    firebaseDb = getDatabase(firebaseApp);
-    
-    console.log("Firebase services initialized successfully");
-  } catch (error) {
-    firebaseInitError = error;
-    console.error("Firebase initialization failed:", error);
-  }
-} else {
-  console.group("Firebase Configuration Diagnostics");
-  console.warn("Firebase was not initialized. Check your environment variables.");
-  console.table({
-    "VITE_FIREBASE_API_KEY": firebaseConfig.apiKey ? (isPlaceholder(firebaseConfig.apiKey) ? "MISSING (Placeholder detected)" : "Present") : "MISSING",
-    "VITE/EXPO FIREBASE_AUTH_DOMAIN": firebaseConfig.authDomain ? "Present" : "MISSING",
-    "VITE_FIREBASE_PROJECT_ID": firebaseConfig.projectId ? (isPlaceholder(firebaseConfig.projectId) ? "MISSING (Placeholder detected)" : "Present") : "MISSING",
-    "VITE_FIREBASE_DATABASE_URL": firebaseConfig.databaseURL ? "Present" : "MISSING",
-    "Environment": import.meta.env.MODE
+export const onAuthStateChanged = (auth, cb) => {
+  cb({
+    uid: 'mock-user-123',
+    displayName: 'Mock User',
+    email: 'mock@example.com'
   });
-  console.info("Note: If deploying to Cloud Run, ensure these are added in the Build Triggers variables section.");
-  console.groupEnd();
-}
-
-export const app = firebaseApp;
-export const auth = firebaseAuth;
-export const db = firebaseDb;
-export const isFirebaseReady = Boolean(app && auth && db);
-export const firebaseDiagnostics = {
-  mode: import.meta.env.MODE,
-  hasApiKey: Boolean(firebaseConfig.apiKey),
-  hasAuthDomain: Boolean(firebaseConfig.authDomain),
-  hasDatabaseURL: Boolean(firebaseConfig.databaseURL),
-  hasProjectId: Boolean(firebaseConfig.projectId),
-  initError: firebaseInitError ? String(firebaseInitError?.message || firebaseInitError) : null,
+  return () => {}; // Unsubscribe function
 };
 
-const isMobileUserAgent = () =>
-  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+export const signInWithPopup = async () => {};
+export const sendSignInLinkToEmail = async () => {};
+export const isSignInWithEmailLink = () => false;
+export const signInWithEmailLink = async () => {};
+export const setPersistence = async () => {};
+export const browserLocalPersistence = {};
+export const signInWithRedirect = async () => {};
 
-const withTimeout = (promise, timeoutMs) =>
-  Promise.race([
-    promise,
-    new Promise((resolve) => {
-      window.setTimeout(() => {
-        console.warn(`Auth bootstrap timed out after ${timeoutMs}ms.`);
-        resolve(null);
-      }, timeoutMs);
-    }),
-  ]);
-
-export const bootstrapAuthSession = async () => {
-  if (!auth) return null;
-  if (authBootstrapPromise) return authBootstrapPromise;
-
-  authBootstrapPromise = (async () => {
-    try {
-      await setPersistence(auth, browserLocalPersistence);
-
-      if (isMobileUserAgent()) {
-        await withTimeout(getRedirectResult(auth), MOBILE_REDIRECT_TIMEOUT_MS);
-      }
-    } catch (error) {
-      console.error("Auth bootstrap failed:", error);
-    }
-
-    return auth.currentUser ?? null;
-  })();
-
-  return authBootstrapPromise;
+// Mock onValue to provide static local data
+export const onValue = (refPath, cb) => {
+  if (refPath === 'crowdLevels') {
+    cb({ val: () => ({ block_a: 'green', block_b: 'green', block_c: 'green', block_d: 'amber', block_e: 'green', block_f: 'red', block_g: 'green', block_h: 'green', shops_north: 'red', shops_south: 'amber', rest_w: 'green', rest_e: 'green', gate_north: 'amber', gate_south: 'green', first_aid: 'green', first_aid_2: 'green', merch: 'amber' }) });
+  } else if (refPath === 'match') {
+    cb({ val: () => ({ time: 25, status: '1st Half' }) });
+  } else if (refPath === 'feed') {
+    cb({ val: () => ({ 'item_1': { text: 'Welcome to Stadium Live Updates. We keep you informed.', timeLabel: 'Now', timestamp: Date.now() } }) });
+  }
+  return () => {}; // return unsubscribe fn
 };
 
-export const crowdLevelsRef = db ? ref(db, 'crowdLevels') : null;
-export const matchRef = db ? ref(db, 'match') : null;
-export const feedRef = db ? ref(db, 'feed') : null;
-
-export const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({ prompt: 'select_account' });
-
-export { 
-  set, 
-  ref, 
-  get, 
-  onValue, 
-  push, 
-  signOut, 
-  onAuthStateChanged, 
-  signInWithPopup, 
-  sendSignInLinkToEmail, 
-  isSignInWithEmailLink, 
-  signInWithEmailLink,
-  setPersistence,
-  browserLocalPersistence,
-  signInWithRedirect
-};
