@@ -30,18 +30,9 @@ export default function LoginScreen() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Handle post-redirect authentication
-  useEffect(() => {
-    if (!auth) return;
-    getRedirectResult(auth).then((result) => {
-      if (result && result.user) {
-        forceLogin(result.user);
-      }
-    }).catch(err => {
-      console.error("Redirect auth error:", err);
-      // Optional: setError(err.message);
-    });
-  }, [auth]);
+  // Note: Redirect results are now handled centrally in AuthContext/firebase.js
+  // to prevent race conditions and ensure reliable session restoration on mobile.
+
 
   const handleGoogleLogin = async () => {
     setError('');

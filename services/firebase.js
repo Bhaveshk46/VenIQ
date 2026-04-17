@@ -101,16 +101,23 @@ export const bootstrapAuthSession = async () => {
 
   authBootstrapPromise = (async () => {
     try {
+      // Ensure persistence is set BEFORE checking redirect results
       await setPersistence(auth, browserLocalPersistence);
 
       if (isMobileUserAgent()) {
-        await withTimeout(getRedirectResult(auth), MOBILE_REDIRECT_TIMEOUT_MS);
+        console.log("📱 Mobile device detected, checking redirect results...");
+        // Increased timeout for mobile redirect handling to ensure slow connections don't drop state
+        await withTimeout(getRedirectResult(auth), MOBILE_REDIRECT_TIMEOUT_MS * 2);
       }
     } catch (error) {
-      console.error("Auth bootstrap failed:", error);
+      console.error("❌ Auth bootstrap failed:", error);
     }
 
-    return auth.currentUser ?? null;
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      console.log("✅ Auth session restored for:", currentUser.email);
+    }
+    return currentUser ?? null;
   })();
 
   return authBootstrapPromise;

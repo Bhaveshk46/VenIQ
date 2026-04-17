@@ -547,3 +547,105 @@ h1, h2, h3, h4 {
 .login-footer a:hover {
   color: #94a3b8;
 }
+/* --- Premium Splash Screen --- */
+.splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #05080f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.splash-logo-container {
+  position: relative;
+}
+
+.splash-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(127,119,221,0.2) 0%, transparent 70%);
+  z-index: -1;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.splash-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.5rem;
+  letter-spacing: 2px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff 0%, #a39dfa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+}
+
+.splash-loader {
+  width: 200px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.splash-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, #7f77dd, transparent);
+  animation: progressMove 1.5s infinite ease-in-out;
+}
+
+@keyframes progressMove {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+
+.splash-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #64748b;
+  margin-top: 10px;
+}
+
+.splash-message {
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.splash-icon-pulse {
+  animation: pulse 2s infinite alternate ease-in-out;
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; visibility: hidden; }
+}
+
+.splash-fade-out {
+  animation: fadeOut 0.5s forwards;
+}

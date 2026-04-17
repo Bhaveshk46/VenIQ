@@ -6,6 +6,7 @@ import { Map, Navigation, MessageCircle, Ticket, Sparkles } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { StadiumProvider } from './contexts/StadiumContext';
 import LoginScreen from './screens/LoginScreen';
+import SplashScreen from './components/SplashScreen';
 
 // Lazy Loaded Screens for Efficiency
 const MapScreen = lazy(() => import('./screens/MapScreen'));
@@ -33,7 +34,12 @@ const ScreenLoader = () => (
 );
 
 function AppContent() {
-  const { user } = useAuth();
+  const { user, initializing } = useAuth();
+
+  // Show premium splash screen while checking initial session
+  if (initializing) {
+    return <SplashScreen />;
+  }
 
   // AUTH GATE: If no user, show login
   if (!user) {

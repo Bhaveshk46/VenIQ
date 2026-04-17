@@ -9,9 +9,11 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [initializing, setInitializing] = useState(true);
   
   const forceLogin = (firebaseUser) => {
     setUser(firebaseUser);
+    setInitializing(false);
   };
 
   useEffect(() => {
@@ -19,24 +21,28 @@ export function AuthProvider({ children }) {
     let isMounted = true;
 
     if (!auth) {
+      setInitializing(false);
       return;
     }
 
     const initAuth = async () => {
       try {
-        // Subscribe immediately. UI is never blocked by auth bootstrap.
+        // Subscribe immediately.
         unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
           if (!isMounted) return;
           setUser(firebaseUser ?? null);
+          setInitializing(false);
         });
 
-        // Bootstrap auth in the background; never block initial UI.
+        // Bootstrap auth in the background.
         const bootstrapUser = await bootstrapAuthSession();
         if (isMounted && bootstrapUser) {
           setUser(bootstrapUser);
+          setInitializing(false);
         }
       } catch (e) {
         console.error("❌ Auth initialization error:", e);
+        if (isMounted) setInitializing(false);
       }
     };
 
@@ -49,11 +55,15 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = async () => {
-    if (auth) await signOut(auth);
+    if (auth) {
+      setInitializing(true);
+      await signOut(auth);
+      setInitializing(false);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, logout, forceLogin }}>
+    <AuthContext.Provider value={{ user, initializing, logout, forceLogin }}>
       {children}
     </AuthContext.Provider>
   );
