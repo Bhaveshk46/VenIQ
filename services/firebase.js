@@ -81,7 +81,7 @@ export const firebaseDiagnostics = {
   initError: firebaseInitError ? String(firebaseInitError?.message || firebaseInitError) : null,
 };
 
-const isMobileUserAgent = () =>
+export const isMobileUserAgent = () =>
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 const withTimeout = (promise, timeoutMs) =>

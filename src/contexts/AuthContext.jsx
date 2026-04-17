@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { auth, onAuthStateChanged, signOut, bootstrapAuthSession } from '../../services/firebase';
+import { auth, onAuthStateChanged, signOut, bootstrapAuthSession, isMobileUserAgent } from '../../services/firebase';
 
 const AuthContext = createContext(null);
 
@@ -27,17 +26,29 @@ export function AuthProvider({ children }) {
 
     const initAuth = async () => {
       try {
-        // Subscribe immediately.
+        const isMobile = isMobileUserAgent();
+
+        // 1. Subscribe to auth changes immediately.
         unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
           if (!isMounted) return;
           setUser(firebaseUser ?? null);
-          setInitializing(false);
+          
+          // On desktop, we can flip initializing as soon as we get the first state.
+          // On mobile, we wait for bootstrap (getRedirectResult) to be 100% sure.
+          if (!isMobile) {
+            setInitializing(false);
+          }
         });
 
-        // Bootstrap auth in the background.
+        // 2. Bootstrap auth (checks redirect results). 
+        // This is the critical "anchor" for mobile login stability.
         const bootstrapUser = await bootstrapAuthSession();
-        if (isMounted && bootstrapUser) {
-          setUser(bootstrapUser);
+        
+        if (isMounted) {
+          if (bootstrapUser) {
+            setUser(bootstrapUser);
+          }
+          // NOW we can finally say we're initialized on mobile.
           setInitializing(false);
         }
       } catch (e) {

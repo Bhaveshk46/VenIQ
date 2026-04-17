@@ -48,11 +48,22 @@ export default function LoginScreen() {
 
     try {
       if (isMobile) {
-        await signInWithRedirect(auth, googleProvider);
+        // Attempt popup first on mobile. Many modern mobile browsers handle it fine 
+        // and it avoids the domain-mismatch "loop" issues of redirects.
+        try {
+          const cred = await signInWithPopup(auth, googleProvider);
+          if (cred && cred.user) {
+            forceLogin(cred.user);
+            return;
+          }
+        } catch (popupErr) {
+          console.warn("Mobile popup blocked or failed, falling back to redirect:", popupErr);
+          // Only fallback to redirect if popup was actually blocked or failed
+          await signInWithRedirect(auth, googleProvider);
+        }
       } else {
         const cred = await signInWithPopup(auth, googleProvider);
         if (cred && cred.user) {
-          // Immediately redirect to main map screen by overriding state 
           forceLogin(cred.user);
         }
       }
