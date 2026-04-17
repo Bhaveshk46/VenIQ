@@ -137,5 +137,6 @@ export {
   signInWithEmailLink,
   setPersistence,
   browserLocalPersistence,
-  signInWithRedirect
+  signInWithRedirect,
+  getRedirectResult
 };
