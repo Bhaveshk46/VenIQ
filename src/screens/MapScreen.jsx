@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback, memo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
-import { onValue, crowdLevelsRef, matchRef } from '../../services/firebase';
+import { onValue } from 'firebase/database';
+import { crowdLevelsRef, matchRef } from '../../services/firebase';
 import { VENUE_LOCATIONS } from '../../utils/directions';
 import ZoneBottomSheet from '../components/ZoneBottomSheet';
 import { useAuth } from '../contexts/AuthContext';
