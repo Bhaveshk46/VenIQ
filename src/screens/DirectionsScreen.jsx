@@ -390,7 +390,7 @@ export default function DirectionsScreen() {
   };
 
   return (
-    <div className="animate-fade-in" style={{ height: '100%', overflowY: 'auto', color: 'white', fontFamily: "'Inter', sans-serif", paddingBottom: '120px' }}>
+    <div className="animate-fade-in" style={{ height: '100%', overflowY: 'auto', color: 'white', fontFamily: "'Inter', sans-serif", paddingBottom: '85px' }}>
       
       {/* Header */}
       <div style={{ 
@@ -407,45 +407,6 @@ export default function DirectionsScreen() {
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            {/* Profile Trigger */}
-            <div 
-              ref={profileRef}
-              onClick={() => setProfileOpen(!profileOpen)}
-              style={{ 
-                width: '38px', height: '38px', borderRadius: '12px', 
-                background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer', position: 'relative'
-              }}
-            >
-              {user?.photoURL ? (
-                <img src={user.photoURL} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '11px' }} />
-              ) : (
-                <UserIcon size={18} color="#10B981" />
-              )}
-              
-              {profileOpen && (
-                <div style={{ 
-                  position: 'absolute', top: 'calc(100% + 12px)', left: 0, 
-                  background: '#010409', border: '1px solid #10B981', 
-                  borderRadius: '12px', padding: '8px', width: '140px',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.8)', zIndex: 200,
-                  animation: 'fadeIn 0.2s'
-                }}>
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); logout(); }}
-                    style={{ 
-                      width: '100%', padding: '10px', background: 'rgba(239, 68, 68, 0.1)', 
-                      border: 'none', borderRadius: '8px', color: '#ff4d4d', 
-                      fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', 
-                      alignItems: 'center', gap: '8px', cursor: 'pointer' 
-                    }}
-                  >
-                    <LogOut size={14} /> Logout
-                  </button>
-                </div>
-              )}
-            </div>
             <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold' }}>Find Your Way</h1>
           </div>
         </div>
