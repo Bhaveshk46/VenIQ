@@ -533,24 +533,49 @@ export default function DirectionsScreen() {
                 role="region"
                 aria-label="Route details"
               >
+                {/* Stats Header */}
                 <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
-                  <span aria-label={`Estimated time: ${(aiRoute || getHeuristicRoute())?.time}`} style={{ padding: '6px 12px', background: 'rgba(127,119,221,0.2)', color: '#34D399', borderRadius: '8px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={14}/> {(aiRoute || getHeuristicRoute())?.time}</span>
-                  <span aria-label={`Distance: ${(aiRoute || getHeuristicRoute())?.dist}`} style={{ padding: '6px 12px', background: 'rgba(255,255,255,0.05)', color: '#cbd5e1', borderRadius: '8px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}><Navigation size={14}/> {(aiRoute || getHeuristicRoute())?.dist}</span>
+                  <div style={{ flex: 1, padding: '12px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '12px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 'bold', marginBottom: '4px' }}>EST. TIME</div>
+                    <div style={{ fontSize: '1.1rem', color: '#10B981', fontWeight: '900' }}>{(aiRoute || getHeuristicRoute())?.time}</div>
+                  </div>
+                  <div style={{ flex: 1, padding: '12px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: '12px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 'bold', marginBottom: '4px' }}>DISTANCE</div>
+                    <div style={{ fontSize: '1.1rem', color: 'white', fontWeight: '900' }}>{(aiRoute || getHeuristicRoute())?.dist}</div>
+                  </div>
                 </div>
 
+                {/* Steps List */}
                 <div 
                   role="list"
                   aria-label="Directions steps"
-                  style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+                  style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
                 >
                   {(aiRoute || getHeuristicRoute())?.steps.map((step, idx) => (
                     <div 
                       key={idx} 
                       role="listitem"
-                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderLeft: '4px solid #10B981', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}
+                      style={{ 
+                        background: 'rgba(255, 255, 255, 0.02)', 
+                        border: '1px solid rgba(255, 255, 255, 0.05)', 
+                        borderRadius: '16px', 
+                        padding: '16px', 
+                        display: 'flex', 
+                        gap: '16px', 
+                        alignItems: 'flex-start',
+                        transition: 'transform 0.2s'
+                      }}
                     >
-                      <div aria-hidden="true" style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(127,119,221,0.2)', color: '#34D399', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', flexShrink: 0 }}>{idx + 1}</div>
-                      <p style={{ margin: 0, color: 'white', lineHeight: '1.5' }}>{step}</p>
+                      <div aria-hidden="true" style={{ 
+                        width: '32px', height: '32px', borderRadius: '50%', 
+                        background: '#10B981', color: '#000', 
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                        fontWeight: '900', fontSize: '0.9rem', flexShrink: 0,
+                        boxShadow: '0 0 15px rgba(16, 185, 129, 0.3)'
+                      }}>
+                        {idx + 1}
+                      </div>
+                      <p style={{ margin: 0, color: '#e2e8f0', lineHeight: '1.6', fontSize: '0.95rem' }}>{step}</p>
                     </div>
                   ))}
                 </div>
