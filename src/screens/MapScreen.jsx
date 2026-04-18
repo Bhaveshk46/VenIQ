@@ -140,7 +140,7 @@ export default function MapScreen() {
   return (
     <div ref={mapContainerRef} style={{ position: 'relative', height: '100%', width: '100%', display: 'flex', flexDirection: 'column', overflowY: 'auto', overflowX: 'hidden', userSelect: 'none' }} className="animate-fade-in">
       
-      {/* Arena Scoreboard Header - Revamped 3-Column Layout */}
+      {/* Arena Scoreboard Header - Revamped Split Layout */}
       <div style={{ 
         margin: 'calc(env(safe-area-inset-top, 0px) + 8px) 12px 0 12px', 
         zIndex: 100, 
@@ -155,36 +155,42 @@ export default function MapScreen() {
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
         position: 'relative' 
       }}>
-        {/* Left: Branding */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
+        {/* Left: Branding & Venue */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <VenIQLogo size={32} />
-          <span style={{ 
-            fontFamily: "'Outfit', sans-serif", 
-            fontWeight: '900', 
-            fontSize: '1.2rem', 
-            letterSpacing: '1px',
-            background: 'linear-gradient(135deg, #fff 0%, #10B981 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
-          }}>VenIQ</span>
-        </div>
-
-        {/* Center: Arena Info */}
-        <div style={{ textAlign: 'center', flex: 2 }}>
-          <h1 style={{ margin: 0, fontSize: '0.65rem', color: '#10B981', fontWeight: '900', letterSpacing: '2px', textTransform: 'uppercase' }}>WANKHEDE ARENA</h1>
-          <div style={{ fontSize: '0.9rem', color: 'white', fontWeight: '900', fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 10px #10B981', animation: 'pulse 1.5s infinite' }}></span>
-            {matchData?.status?.toUpperCase() || 'LIVE'}
+          <div>
+            <h1 style={{ 
+              margin: 0, 
+              fontFamily: "'Outfit', sans-serif", 
+              fontWeight: '900', 
+              fontSize: '1.2rem', 
+              lineHeight: 1,
+              color: 'white'
+            }}>
+              Ven<span style={{ color: '#10B981' }}>IQ</span>
+            </h1>
+            <p style={{ margin: '2px 0 0 0', fontSize: '0.6rem', color: '#10B981', fontWeight: '900', letterSpacing: '1px', textTransform: 'uppercase' }}>
+              WANKHEDE ARENA
+            </p>
           </div>
         </div>
 
-        {/* Right: Account Profile */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', flex: 1 }}>
+        {/* Right: Status & Account */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+            <div style={{ fontSize: '0.55rem', color: '#94a3b8', fontWeight: 'bold', letterSpacing: '1px' }}>STATUS</div>
+            <div style={{ fontSize: '0.8rem', color: '#10B981', fontWeight: '900', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 8px #10B981', animation: 'pulse 1.5s infinite' }}></span>
+              {matchData?.status?.toUpperCase() || 'LIVE'}
+            </div>
+          </div>
+          
+          {/* Profile Trigger */}
           <div 
             ref={profileRef}
             onClick={() => setProfileOpen(!profileOpen)}
             style={{ 
-              width: '40px', height: '40px', borderRadius: '50%', 
+              width: '42px', height: '42px', borderRadius: '50%', 
               background: 'rgba(16, 185, 129, 0.1)', border: '2px solid rgba(16, 185, 129, 0.4)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', position: 'relative',
