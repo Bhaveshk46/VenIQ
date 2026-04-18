@@ -7,6 +7,10 @@ VenIQ is a premium, mobile-first AI concierge designed to revolutionize the fan 
 
 ---
 
+## 📱 Mobile-First Optimization
+**VenIQ is specifically engineered for mobile device users.** Since fans at a live match cannot carry PCs, the entire experience — from the high-contrast glassmorphic design to the bottom-navigation reachability — is optimized for one-handed operation on smartphones in high-intensity stadium environments.
+
+---
 
 ## 🏗️ Technical Architecture
 
