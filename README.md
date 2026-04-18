@@ -7,13 +7,6 @@ VenIQ is a premium, mobile-first AI concierge designed to revolutionize the fan 
 
 ---
 
-## 📸 Visual Experience
-
-| **Premium UI** | **Real-time Map** | **AI Wayfinding** |
-| :--- | :--- | :--- |
-| ![Login](https://raw.githubusercontent.com/Bhaveshk46/VenIQ/main/public/emerald_map.png) | ![Map](https://raw.githubusercontent.com/Bhaveshk46/VenIQ/main/public/emerald_map.png) | High-contrast Emerald glassmorphism designed for stadium environments. |
-
----
 
 ## 🏗️ Technical Architecture
 
