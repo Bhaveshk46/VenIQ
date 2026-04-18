@@ -155,7 +155,7 @@ export default function MapScreen() {
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
         position: 'relative' 
       }}>
-        {/* Left: Branding & Venue */}
+        {/* Left: Branding & Status */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <VenIQLogo size={32} />
           <div>
@@ -163,27 +163,22 @@ export default function MapScreen() {
               margin: 0, 
               fontFamily: "'Outfit', sans-serif", 
               fontWeight: '900', 
-              fontSize: '1.2rem', 
+              fontSize: '1.4rem', 
               lineHeight: 1,
+              letterSpacing: '0.5px',
               color: 'white'
             }}>
               Ven<span style={{ color: '#10B981' }}>IQ</span>
             </h1>
-            <p style={{ margin: '2px 0 0 0', fontSize: '0.6rem', color: '#10B981', fontWeight: '900', letterSpacing: '1px', textTransform: 'uppercase' }}>
-              WANKHEDE ARENA
-            </p>
+            <div style={{ margin: '4px 0 0 0', fontSize: '0.75rem', color: '#10B981', fontWeight: '900', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 10px #10B981', animation: 'pulse 1.5s infinite' }}></span>
+              {matchData?.status?.toUpperCase() || 'PRE-MATCH'}
+            </div>
           </div>
         </div>
 
-        {/* Right: Status & Account */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-            <div style={{ fontSize: '0.55rem', color: '#94a3b8', fontWeight: 'bold', letterSpacing: '1px' }}>STATUS</div>
-            <div style={{ fontSize: '0.8rem', color: '#10B981', fontWeight: '900', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 8px #10B981', animation: 'pulse 1.5s infinite' }}></span>
-              {matchData?.status?.toUpperCase() || 'LIVE'}
-            </div>
-          </div>
+        {/* Right: Account Profile */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
           
           {/* Profile Trigger */}
           <div 
