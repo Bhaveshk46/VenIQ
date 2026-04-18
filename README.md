@@ -26,7 +26,7 @@ VenIQ is a premium, mobile-first AI concierge designed to revolutionize the fan 
 | :--- | :--- | :--- |
 | **Interactive Map** | React + Firebase | Live crowd levels are streamed from Firebase RDB to the map markers, changing colors (Green/Yellow/Red) in real-time based on simulation workers. |
 | **Travel Planner** | Google Maps JS | Uses **Places Autocomplete** to find the user's home, **Geocoding** to calculate distance, and **Directions API** to provide live travel times and private transport estimates. |
-| **AI Wayfinding** | Gemini 2.0 Flash | Generates rich, narrative walking instructions for 15+ hardcoded stadium routes, with a deterministic heuristic fallback for reliability. |
+| **AI Wayfinding** | Gemini 2.0 Flash | Generates rich, narrative walking instructions dynamically based on the 15+ venue zones, with a deterministic heuristic fallback for reliability. |
 | **Concierge Chat** | Gemini 2.0 Flash | A stateful AI assistant that helps with snack locations, restroom finding, and emergency procedures using a comprehensive "Stadium Lore" system instruction. |
 | **Digital Pass**| QR.react + Auth | Deterministically generates a "smart ticket" based on the user's unique Firebase UID, allowing for persistent seat assignments without a complex backend. |
 

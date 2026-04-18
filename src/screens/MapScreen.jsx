@@ -12,26 +12,54 @@ import ZoneBottomSheet from '../components/ZoneBottomSheet';
 import { useAuth } from '../contexts/AuthContext';
 import { useStadium } from '../contexts/StadiumContext';
 
+// Helper to get status color for accessibility and visuals
+const getStatusColor = (level) => {
+  switch (level) {
+    case 'red': return '#ef4444';
+    case 'amber': return '#f59e0b';
+    case 'green': return '#10b981';
+    default: return '#10B981';
+  }
+};
+
 // Memoized Marker Component for Performance (Efficiency) & Accessibility
-const MapMarker = memo(({ zone, color, onClick }) => (
-  <div 
-    onClick={() => onClick(zone)} 
-    role="button"
-    aria-label={`${zone.name || zone.id}, Capacity: ${zone.level || 'Normal'}`}
-    style={{ 
-      position: 'absolute', top: `${zone.top}%`, left: `${zone.left}%`, 
-      transform: 'translate(-50%, -50%)', width: '22px', height: '22px', 
-      borderRadius: '50%', backgroundColor: color, border: '2px solid white', 
-      boxShadow: `0 0 10px ${color}`, cursor: 'pointer', zIndex: 20 
-    }}
-  >
-    <div style={{ 
-      position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', 
-      borderRadius: '50%', background: 'inherit', animation: 'fadeIn 1.5s infinite alternate', 
-      opacity: 0.5 
-    }} />
-  </div>
-));
+const MapMarker = memo(({ zone, color, onClick }) => {
+  const statusColor = getStatusColor(zone.level);
+  
+  return (
+    <div 
+      onClick={() => onClick(zone)} 
+      role="button"
+      aria-label={`${zone.name || zone.id}, Capacity: ${zone.level || 'Normal'}`}
+      style={{ 
+        position: 'absolute', top: `${zone.top}%`, left: `${zone.left}%`, 
+        transform: 'translate(-50%, -50%)', width: '24px', height: '24px', 
+        borderRadius: '50%', 
+        backgroundColor: color, 
+        border: `3px solid ${statusColor}`, // Synced with README status colors
+        boxShadow: `0 0 15px ${statusColor}`, 
+        cursor: 'pointer', zIndex: 20,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+      }}
+    >
+      {/* Inner status dot */}
+      <div style={{ 
+        width: '6px', height: '6px', borderRadius: '50%', 
+        background: 'white', opacity: 0.8,
+        animation: 'pulse 1.5s infinite'
+      }} />
+      
+      {/* Outer pulsing status ring */}
+      <div style={{ 
+        position: 'absolute', top: -4, left: -4, right: -4, bottom: -4,
+        borderRadius: '50%', border: `1px solid ${statusColor}`,
+        animation: 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
+        opacity: 0.4
+      }} />
+    </div>
+  );
+});
 
 export default function MapScreen() {
   const { user, logout } = useAuth();
