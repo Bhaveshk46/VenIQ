@@ -140,60 +140,96 @@ export default function MapScreen() {
   return (
     <div ref={mapContainerRef} style={{ position: 'relative', height: '100%', width: '100%', display: 'flex', flexDirection: 'column', overflowY: 'auto', overflowX: 'hidden', userSelect: 'none' }} className="animate-fade-in">
       
-      {/* Arena Scoreboard Header */}
-      <div style={{ margin: 'calc(env(safe-area-inset-top, 0px) + 8px) 12px 0 12px', zIndex: 100, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 18px', background: 'var(--bg-dark)', border: '2px solid rgba(16, 185, 129, 0.4)', borderRightWidth: '8px', boxShadow: '10px 10px 0 rgba(16, 185, 129, 0.1)', position: 'relative' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <VenIQLogo size={28} />
-          {/* Profile Trigger */}
+      {/* Arena Scoreboard Header - Revamped 3-Column Layout */}
+      <div style={{ 
+        margin: 'calc(env(safe-area-inset-top, 0px) + 8px) 12px 0 12px', 
+        zIndex: 100, 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        padding: '12px 18px', 
+        background: 'rgba(8, 12, 20, 0.9)', 
+        backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(16, 185, 129, 0.4)', 
+        borderBottom: '4px solid rgba(16, 185, 129, 0.6)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+        position: 'relative' 
+      }}>
+        {/* Left: Branding */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
+          <VenIQLogo size={32} />
+          <span style={{ 
+            fontFamily: "'Outfit', sans-serif", 
+            fontWeight: '900', 
+            fontSize: '1.2rem', 
+            letterSpacing: '1px',
+            background: 'linear-gradient(135deg, #fff 0%, #10B981 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>VenIQ</span>
+        </div>
+
+        {/* Center: Arena Info */}
+        <div style={{ textAlign: 'center', flex: 2 }}>
+          <h1 style={{ margin: 0, fontSize: '0.65rem', color: '#10B981', fontWeight: '900', letterSpacing: '2px', textTransform: 'uppercase' }}>WANKHEDE ARENA</h1>
+          <div style={{ fontSize: '0.9rem', color: 'white', fontWeight: '900', fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 10px #10B981', animation: 'pulse 1.5s infinite' }}></span>
+            {matchData?.status?.toUpperCase() || 'LIVE'}
+          </div>
+        </div>
+
+        {/* Right: Account Profile */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', flex: 1 }}>
           <div 
             ref={profileRef}
             onClick={() => setProfileOpen(!profileOpen)}
             style={{ 
-              width: '40px', height: '40px', borderRadius: '12px', 
-              background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)',
+              width: '40px', height: '40px', borderRadius: '50%', 
+              background: 'rgba(16, 185, 129, 0.1)', border: '2px solid rgba(16, 185, 129, 0.4)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', position: 'relative'
+              cursor: 'pointer', position: 'relative',
+              boxShadow: profileOpen ? '0 0 15px rgba(16, 185, 129, 0.4)' : 'none',
+              transition: 'all 0.3s'
             }}
           >
             {user?.photoURL ? (
-              <img src={user.photoURL} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '11px' }} />
+              <img src={user.photoURL} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
             ) : (
               <UserIcon size={20} color="#10B981" />
             )}
             
             {profileOpen && (
               <div style={{ 
-                position: 'absolute', top: 'calc(100% + 12px)', left: 0, 
-                background: '#010409', border: '1px solid #10B981', 
-                borderRadius: '12px', padding: '8px', width: '140px',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.8)', zIndex: 200,
+                position: 'absolute', top: 'calc(100% + 12px)', right: 0, 
+                background: '#0a0d14', border: '1px solid #10B981', 
+                borderRadius: '12px', padding: '12px', width: '160px',
+                boxShadow: '0 20px 40px rgba(0,0,0,0.8)', zIndex: 200,
                 animation: 'fadeIn 0.2s'
               }}>
+                <div style={{ marginBottom: '12px', paddingBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                   <p style={{ margin: 0, fontSize: '0.75rem', color: '#94a3b8', fontWeight: 'bold' }}>LOGGED IN AS</p>
+                   <p style={{ margin: '2px 0 0 0', fontSize: '0.85rem', color: 'white', fontWeight: '900', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.displayName || 'User'}</p>
+                </div>
                 <button 
                   onClick={(e) => { e.stopPropagation(); logout(); }}
                   style={{ 
-                    width: '100%', padding: '10px', background: 'rgba(239, 68, 68, 0.1)', 
-                    border: 'none', borderRadius: '8px', color: '#ff4d4d', 
+                    width: '100%', padding: '10px', background: 'rgba(239, 68, 68, 0.15)', 
+                    border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '8px', color: '#ff4d4d', 
                     fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', 
-                    alignItems: 'center', gap: '8px', cursor: 'pointer' 
+                    alignItems: 'center', gap: '10px', cursor: 'pointer',
+                    transition: 'all 0.2s'
                   }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.25)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)'}
                 >
-                  <LogOut size={14} /> Logout
+                  <LogOut size={16} /> Logout
                 </button>
               </div>
             )}
           </div>
-
-          <div>
-            <h1 style={{ margin: 0, fontSize: '0.85rem', color: '#10B981', fontWeight: '900', letterSpacing: '2px', textTransform: 'uppercase' }}>VENIQ LIVE</h1>
-            <p style={{ margin: 0, fontSize: '1.2rem', color: 'white', fontWeight: '900', fontStyle: 'italic' }}>WANKHEDE ARENA</p>
-          </div>
-        </div>
-        <div style={{ textAlign: 'right' }}>
-          <div style={{ fontSize: '0.6rem', color: '#94a3b8', fontWeight: 'bold' }}>MATCH STATUS</div>
-          <div style={{ fontSize: '0.9rem', color: '#10B981', fontWeight: '900' }}>● {matchData?.status?.toUpperCase() || '2ND HALF'}</div>
         </div>
       </div>
+
 
       {/* Sporty Performance Filters */}
       <div 
