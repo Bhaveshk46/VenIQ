@@ -3,6 +3,7 @@ import { VENUE_LOCATIONS } from '../../utils/directions';
 import {
   STADIUM_MAP_IMAGE,
   STADIUM_MAP_EDGE_MASK,
+  STADIUM_MAP_ASPECT_BOX,
 } from '../utils/mapLayout';
 
 function findVenueByName(name) {

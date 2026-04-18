@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import { 
   Navigation, MapPin, Car, Train, Bus, Bike, 
   Clock, AlertTriangle, User as UserIcon, LogOut,
@@ -219,7 +221,9 @@ export default function DirectionsScreen() {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const locationState = (typeof window !== 'undefined' && window.history.state?.usr) || {};
+  const location = useLocation();
+  const locationState = location.state || {};
+
   const [activeTab, setActiveTab] = useState('inside');
 
   // Tab 1 State: Inside Stadium
@@ -260,7 +264,9 @@ export default function DirectionsScreen() {
       setActiveTab('inside');
       setToLoc(locationState.destination);
       // Clear after consuming so navigating back doesn't re-set it
-      window.history.replaceState({}, '');
+      // Note: In React Router v6, we don't usually manually clear history state like this
+      // as it might interfere with navigation. It's better to just use the state once.
+
     }
   }, []);
 
@@ -450,10 +456,11 @@ export default function DirectionsScreen() {
               <h3 style={{ textTransform: 'uppercase', letterSpacing: '1px', color: '#94a3b8', fontSize: '0.75rem', marginBottom: '12px' }}>Quick Access</h3>
               <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px' }}>
                 {[
-                  { label: 'Restroom', icon: <Tent size={18} />, dest: 'Restroom Level 1' },
-                  { label: 'Food', icon: <Coffee size={18} />, dest: 'Food Court North' },
-                  { label: 'Medical', icon: <PlusSquare size={18} />, dest: 'Medical Bay' },
-                  { label: 'Merch', icon: <ShoppingBag size={18} />, dest: 'Merchandise Store' },
+                  { label: 'Restroom', icon: <Tent size={18} />, dest: 'West Restrooms' },
+                  { label: 'Food', icon: <Coffee size={18} />, dest: 'North Concourse Shops' },
+                  { label: 'Medical', icon: <PlusSquare size={18} />, dest: 'Primary Medical Center' },
+                  { label: 'Merch', icon: <ShoppingBag size={18} />, dest: 'Official Merchandise Store' },
+
                 ].map(s => (
                   <button 
                     key={s.label} 
