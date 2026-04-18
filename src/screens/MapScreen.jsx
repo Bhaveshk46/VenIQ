@@ -4,6 +4,10 @@ import { ChevronDown, User as UserIcon, LogOut } from 'lucide-react';
 import { onValue } from 'firebase/database';
 import { crowdLevelsRef, matchRef } from '../../services/firebase';
 import { VENUE_LOCATIONS } from '../../utils/directions';
+import {
+  STADIUM_MAP_EDGE_MASK,
+  STADIUM_MAP_ASPECT_BOX,
+} from '../utils/mapLayout';
 import ZoneBottomSheet from '../components/ZoneBottomSheet';
 import { useAuth } from '../contexts/AuthContext';
 import { useStadium } from '../contexts/StadiumContext';
@@ -243,10 +247,10 @@ export default function MapScreen() {
             position: 'relative', 
             width: '100%', 
             maxWidth: 'calc(100vh - 320px)', 
-            aspectRatio: '1/1', 
+            ...STADIUM_MAP_ASPECT_BOX,
             margin: '0 auto',
-            maskImage: 'radial-gradient(circle, black 82%, transparent 98%)', // Expansive mask for edge visibility
-            WebkitMaskImage: 'radial-gradient(circle, black 82%, transparent 98%)'
+            maskImage: STADIUM_MAP_EDGE_MASK,
+            WebkitMaskImage: STADIUM_MAP_EDGE_MASK,
           }}>
             <img 
               src="/emerald_map.png" 

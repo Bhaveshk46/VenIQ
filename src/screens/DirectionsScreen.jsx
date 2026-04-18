@@ -80,6 +80,7 @@ async function geocodeArea(area) {
 
 
 import { VENUE_LOCATIONS } from '../../utils/directions';
+import StadiumLayoutHint from '../components/StadiumLayoutHint';
 
 const INSIDE_LOCATIONS = [
   { group: 'Gates', items: Object.values(VENUE_LOCATIONS).filter(v => v.type === 'gate').map(v => v.name) },
@@ -549,60 +550,10 @@ export default function DirectionsScreen() {
               </div>
             )}
 
-            {/* Dynamic Stadium SVG Hint */}
+            {/* Same map asset + % coords as Map tab (replaces schematic ellipse SVG). */}
             <div style={{ marginTop: '20px', padding: '24px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px', textAlign: 'center' }}>
               <h3 style={{ textTransform: 'uppercase', letterSpacing: '1px', color: '#94a3b8', fontSize: '0.75rem', marginBottom: '20px' }}>Stadium Layout Hint</h3>
-              {(() => {
-                const getLocationPos = (loc) => { // loc is the .name
-                  if (!loc) return null;
-                  const vLoc = Object.values(VENUE_LOCATIONS).find(v => v.name === loc);
-                  if (!vLoc) return null;
-
-                  // Find vector angle from center (50%, 50%)
-                  const dx = vLoc.left - 50;
-                  const dy = vLoc.top - 50;
-                  const angleRad = Math.atan2(dy, dx);
-                  
-                  // Map to the SVG ellipses
-                  let rx = 70, ry = 40; 
-                  if (vLoc.type === 'gate') { rx = 100; ry = 70; }
-
-                  return {
-                    x: 120 + (rx * Math.cos(angleRad)),
-                    y: 90 + (ry * Math.sin(angleRad)),
-                    label: vLoc.name.split(' ')[0] + (vLoc.name.split(' ')[1] ? ' ' + vLoc.name.split(' ')[1].replace('(', '') : '')
-                  };
-                };
-
-                const fromPos = getLocationPos(fromLoc);
-                const toPos = getLocationPos(toLoc);
-
-                return (
-                  <svg width="240" height="180" viewBox="0 0 240 180" style={{ margin: '0 auto', display: 'block' }}>
-                    <ellipse cx="120" cy="90" rx="100" ry="70" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
-                    <ellipse cx="120" cy="90" rx="70" ry="40" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="2" />
-                    
-                    {/* Render origin node */}
-                    {fromPos && (
-                      <g>
-                        <circle cx={fromPos.x} cy={fromPos.y} r="8" fill="#10B981" stroke="#080c14" strokeWidth="2" style={{ animation: 'pulse 2s infinite' }} />
-                        <text x={fromPos.x} y={fromPos.y - 12} fill="#94a3b8" fontSize="10" textAnchor="middle">{fromPos.label} (You)</text>
-                      </g>
-                    )}
-
-                    {/* Render destination node */}
-                    {toPos && (
-                      <g>
-                        <circle cx={toPos.x} cy={toPos.y} r="8" fill="#06b6d4" stroke="#080c14" strokeWidth="2" style={{ animation: 'pulse 2s infinite alternate' }} />
-                        <text x={toPos.x} y={toPos.y + 18} fill="#94a3b8" fontSize="10" textAnchor="middle">{toPos.label} (Dest)</text>
-                      </g>
-                    )}
-
-                    {/* Pitch */}
-                    <rect x="90" y="70" width="60" height="40" fill="rgba(127,119,221,0.1)" rx="4" />
-                  </svg>
-                );
-              })()}
+              <StadiumLayoutHint fromName={fromLoc} toName={toLoc} />
             </div>
 
           </div>
