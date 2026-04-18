@@ -216,7 +216,6 @@ h1, h2, h3, h4 {
 
 /* Bottom Nav */
 .bottom-nav {
-  height: 65px;
   width: 100%;
   display: flex;
   justify-content: space-around;
@@ -225,14 +224,10 @@ h1, h2, h3, h4 {
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
   border-top: 1px solid rgba(16, 185, 129, 0.2);
-  padding-bottom: max(env(safe-area-inset-bottom), 8px);
-  height: calc(65px + max(env(safe-area-inset-bottom), 8px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  height: calc(65px + env(safe-area-inset-bottom, 0px));
   flex-shrink: 0;
   z-index: 100;
-  /* Stick to the very bottom of the screen regardless of scrolling */
-  position: absolute;
-  bottom: 0;
-  left: 0;
   box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
 }
 
@@ -342,7 +337,7 @@ h1, h2, h3, h4 {
     max-height: none;
     opacity: 1;
     border-top: 1px solid rgba(16, 185, 129, 0.2);
-    padding-bottom: 80px; /* Safe space above bottom nav */
+    padding-bottom: 0;
   }
 }
 

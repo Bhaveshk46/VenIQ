@@ -309,7 +309,7 @@ export default function ZoneBottomSheet({ selectedZone, match, onClose, highligh
           {/* Scrollable Content */}
           <div style={{
             flex: 1, overflowY: 'auto', padding: '0 24px',
-            paddingBottom: 'calc(24px + 80px)' // safe area for bottom nav
+            paddingBottom: '24px'
           }}>
 
             {/* SHOP DIRECTORY LIST (Unified Box Design) */}

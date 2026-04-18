@@ -390,7 +390,7 @@ export default function DirectionsScreen() {
   };
 
   return (
-    <div className="animate-fade-in" style={{ height: '100%', overflowY: 'auto', color: 'white', fontFamily: "'Inter', sans-serif", paddingBottom: '85px' }}>
+    <div className="animate-fade-in" style={{ height: '100%', overflowY: 'auto', color: 'white', fontFamily: "'Inter', sans-serif" }}>
       
       {/* Header */}
       <div style={{ 
@@ -910,9 +910,6 @@ export default function DirectionsScreen() {
         )}
 
       </div>
-      
-      {/* Safe Spacer for Bottom Nav Clearance */}
-      <div style={{ height: '140px' }} aria-hidden="true" />
       
       <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
     </div>

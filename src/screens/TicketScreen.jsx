@@ -97,7 +97,6 @@ export default function TicketScreen() {
       overflowY: 'auto',
       padding: '24px', 
       paddingTop: 'calc(env(safe-area-inset-top, 0px) + 40px)', 
-      paddingBottom: '85px',
       display: 'flex', 
       flexDirection: 'column',
       alignItems: 'center', 

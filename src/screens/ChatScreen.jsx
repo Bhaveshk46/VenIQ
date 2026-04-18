@@ -233,7 +233,7 @@ export default function ChatScreen() {
       <div 
         style={{ 
           padding: '12px 14px', 
-          paddingBottom: 'calc(14px + max(env(safe-area-inset-bottom), 65px))',
+          paddingBottom: 'calc(14px + env(safe-area-inset-bottom, 0px))',
           background: 'rgba(8, 12, 20, 0.95)', 
           backdropFilter: 'blur(20px)', 
           borderTop: '1px solid rgba(255,255,255,0.08)', 
