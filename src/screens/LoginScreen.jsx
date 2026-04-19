@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { auth, googleProvider, signInWithPopup, signInWithRedirect, isFirebaseReady, getRedirectResult } from '../../services/firebase';
+import React, { useState } from 'react';
+import { auth, googleProvider, signInWithPopup, signInWithRedirect, isFirebaseReady } from '../../services/firebase';
 import VenIQLogo from '../components/VenIQLogo';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 
 const GoogleIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style={{ marginRight: '8px' }}>
@@ -16,19 +16,8 @@ export default function LoginScreen() {
   const { forceLogin } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-  // Parallax effect for background blobs
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth - 0.5) * 20,
-        y: (e.clientY / window.innerHeight - 0.5) * 20,
-      });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  // Parallax effect removed to improve performance/cleanliness
 
   // Note: Redirect results are now handled centrally in AuthContext/firebase.js
   // to prevent race conditions and ensure reliable session restoration on mobile.

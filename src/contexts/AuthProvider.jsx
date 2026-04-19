@@ -1,15 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { auth, onAuthStateChanged, signOut, bootstrapAuthSession, isMobileUserAgent } from '../../services/firebase';
-
-const AuthContext = createContext(null);
-
-export function useAuth() {
-  return useContext(AuthContext);
-}
+import { AuthContext } from './AuthContext';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [initializing, setInitializing] = useState(true);
+  const [initializing, setInitializing] = useState(!!auth);
   
   const forceLogin = (firebaseUser) => {
     setUser(firebaseUser);
@@ -21,7 +16,6 @@ export function AuthProvider({ children }) {
     let isMounted = true;
 
     if (!auth) {
-      setInitializing(false);
       return;
     }
 

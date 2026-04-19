@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Clock, Navigation, ChevronLeft, Store, Users, MapPin, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { getPredictionData, getSensorInsights } from '../../utils/crowdSimulation';
+import { getSensorInsights } from '../../utils/crowdSimulation';
 import { NORTH_SHOPS, SOUTH_SHOPS, SEATING_GROUPS } from '../utils/constants';
 // Removed recharts imports
 
@@ -109,7 +109,6 @@ function SeatingChart({ rows, blockName, highlightSeat }) {
                       const point = svg.createSVGPoint();
                       point.x = x + 5;
                       point.y = y;
-                      const ctm = svg.getScreenCTM();
                       const parentRect = svg.parentElement.getBoundingClientRect();
                       
                       // Using the viewBox coordinates is easier since we are relative to the container

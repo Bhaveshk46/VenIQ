@@ -9,8 +9,8 @@ import {
   STADIUM_MAP_ASPECT_BOX,
 } from '../utils/mapLayout';
 import ZoneBottomSheet from '../components/ZoneBottomSheet';
-import { useAuth } from '../contexts/AuthContext';
-import { useStadium } from '../contexts/StadiumContext';
+import { useAuth } from '../hooks/useAuth';
+import { useStadium } from '../hooks/useStadium';
 import VenIQLogo from '../components/VenIQLogo';
 
 // Memoized Marker Component for Performance (Efficiency) & Accessibility
@@ -55,6 +55,7 @@ export default function MapScreen() {
 
   const handleMarkerClick = useCallback((zone) => {
     setSelectedZone(zone);
+    setHasScrolled(false);
     setTimeout(() => {
       if (mapContainerRef.current) {
         mapContainerRef.current.scrollTo({ top: mapContainerRef.current.scrollHeight, behavior: 'smooth' });
@@ -66,9 +67,6 @@ export default function MapScreen() {
     setActiveFilter(id);
   }, []);
 
-  useEffect(() => {
-    if (selectedZone) setHasScrolled(false);
-  }, [selectedZone]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -78,16 +76,6 @@ export default function MapScreen() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const SECTOR_ANGLES = useMemo(() => ({
-    block_a: { start: -22.5, end: 22.5 },
-    block_b: { start: 22.5, end: 67.5 },
-    block_c: { start: 67.5, end: 112.5 },
-    block_d: { start: 112.5, end: 157.5 },
-    block_e: { start: 157.5, end: 202.5 },
-    block_f: { start: 202.5, end: 247.5 },
-    block_g: { start: 247.5, end: 292.5 },
-    block_h: { start: 292.5, end: 337.5 },
-  }), []);
 
   useEffect(() => {
     const unsubCrowd = onValue(crowdLevelsRef, (snapshot) => {
@@ -110,14 +98,19 @@ export default function MapScreen() {
         const blockName = `block_${parts[0].toLowerCase()}`;
         const tierRow = parseInt(parts[1], 10);
         let tierId = tierRow > 30 ? 'vip' : tierRow > 15 ? 'club' : 'lower';
+        
         if (VENUE_LOCATIONS[blockName]) {
-          setSelectedZone({ id: blockName, ...VENUE_LOCATIONS[blockName], level: crowdLevels[blockName] || 'green' });
-          setHighlightSeat({ blockCode: parts[0], rowName: `${parts[0]}${parts[1]}`, seatNo: parseInt(parts[2], 10), tierId });
+          // Use Promise.resolve or setTimeout to defer state updates and avoid synchronous cascading render warning
+          Promise.resolve().then(() => {
+            setSelectedZone({ id: blockName, ...VENUE_LOCATIONS[blockName], level: crowdLevels[blockName] || 'green' });
+            setHasScrolled(false);
+            setHighlightSeat({ blockCode: parts[0], rowName: `${parts[0]}${parts[1]}`, seatNo: parseInt(parts[2], 10), tierId });
+          });
         }
       }
       navigate('/', { replace: true });
     }
-  }, [location.search, navigate]);
+  }, [location.search, navigate, crowdLevels]);
 
   const getMarkerColor = (type) => {
     switch (type) {
@@ -181,16 +174,21 @@ export default function MapScreen() {
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
           
           {/* Profile Trigger */}
-          <div 
+          <button 
+            type="button"
             ref={profileRef}
             onClick={() => setProfileOpen(!profileOpen)}
+            aria-label="Toggle user profile menu"
+            aria-haspopup="true"
+            aria-expanded={profileOpen}
             style={{ 
               width: '42px', height: '42px', borderRadius: '50%', 
               background: 'rgba(16, 185, 129, 0.1)', border: '2px solid rgba(16, 185, 129, 0.4)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', position: 'relative',
               boxShadow: profileOpen ? '0 0 15px rgba(16, 185, 129, 0.4)' : 'none',
-              transition: 'all 0.3s'
+              transition: 'all 0.3s',
+              padding: 0
             }}
           >
             {user?.photoURL ? (
@@ -227,7 +225,7 @@ export default function MapScreen() {
                 </button>
               </div>
             )}
-          </div>
+          </button>
         </div>
       </div>
 

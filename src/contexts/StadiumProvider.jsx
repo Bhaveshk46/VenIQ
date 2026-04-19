@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
-
-const StadiumContext = createContext(null);
+import React, { useState } from 'react';
+import { StadiumContext } from './StadiumContext';
 
 export function StadiumProvider({ children }) {
   const [selectedZone, setSelectedZone] = useState(null);
@@ -18,6 +17,3 @@ export function StadiumProvider({ children }) {
   );
 }
 
-export function useStadium() {
-  return useContext(StadiumContext);
-}

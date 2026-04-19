@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, Sparkles, Zap, MapPin, User as UserIcon, LogOut } from 'lucide-react';
 import { getGeminiResponse } from '../../services/gemini';
-import { useStadium } from '../contexts/StadiumContext';
-import { useAuth } from '../contexts/AuthContext';
+import { useStadium } from '../hooks/useStadium';
+import { useAuth } from '../hooks/useAuth';
 import { MAX_CHAT_INPUT_LENGTH } from '../utils/constants';
 
 const SUGGESTED_PROMPTS = [
@@ -15,9 +15,9 @@ const SUGGESTED_PROMPTS = [
 ];
 
 export default function ChatScreen() {
-  const { user, logout } = useAuth();
+  useAuth();
   const { selectedZone, matchData, crowdLevels } = useStadium();
-  const [profileOpen, setProfileOpen] = useState(false);
+  const [, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
 
   // Close profile dropdown on outside click

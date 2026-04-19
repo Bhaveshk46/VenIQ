@@ -58,7 +58,7 @@ export const getSensorInsights = (time, zoneType) => {
   return { reason: "Normal Flow", occupancy: Math.floor(Math.random() * 20) + 20 };
 };
 
-export const getPredictionData = (zoneId) => {
+export const getPredictionData = () => {
   // Returns prediction for the bar chart
   return [
     { label: 'Pre', level: 80 },

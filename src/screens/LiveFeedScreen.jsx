@@ -4,9 +4,7 @@ import { feedRef } from '../../services/firebase';
 import { Activity, Clock, AlertCircle } from 'lucide-react';
 
 export default function LiveFeedScreen() {
-  const [feed, setFeed] = useState([
-    { id: 'initial', text: 'Welcome to Stadium Live Updates. We keep you informed about crowd levels.', timeLabel: 'Now', timestamp: Date.now() }
-  ]);
+  const [feed, setFeed] = useState([]);
 
   useEffect(() => {
     const unsub = onValue(feedRef, (snapshot) => {
@@ -18,6 +16,14 @@ export default function LiveFeedScreen() {
         })).sort((a, b) => b.timestamp - a.timestamp);
         
         setFeed(feedArray);
+      } else {
+        // Fallback to welcome message if no data exists in Firebase
+        setFeed([{ 
+          id: 'initial', 
+          text: 'Welcome to Stadium Live Updates. We keep you informed about crowd levels.', 
+          timeLabel: 'Now', 
+          timestamp: Date.now() 
+        }]);
       }
     });
 

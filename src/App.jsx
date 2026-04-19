@@ -3,8 +3,9 @@ import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-do
 import { Map, Navigation, MessageCircle, Ticket, Sparkles } from 'lucide-react';
 
 // Auth
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { StadiumProvider } from './contexts/StadiumContext';
+import { AuthProvider } from './contexts/AuthProvider';
+import { useAuth } from './hooks/useAuth';
+import { StadiumProvider } from './contexts/StadiumProvider';
 import LoginScreen from './screens/LoginScreen';
 import SplashScreen from './components/SplashScreen';
 

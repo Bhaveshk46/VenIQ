@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Ticket, ArrowRight, User as UserIcon, LogOut } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 
 // Generate deterministic seat data from user UID
 function generateTicketFromUID(uid) {
@@ -63,8 +63,8 @@ function generateTicketFromUID(uid) {
 
 export default function TicketScreen() {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
-  const [profileOpen, setProfileOpen] = React.useState(false);
+  const { user } = useAuth();
+  const [, setProfileOpen] = React.useState(false);
   const profileRef = React.useRef(null);
 
   // Close profile dropdown on outside click

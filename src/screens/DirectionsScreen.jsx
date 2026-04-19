@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { 
-  Navigation, MapPin, Car, Train, Bus, Bike, 
+  Navigation, MapPin, Car, Bike, 
   Clock, AlertTriangle, User as UserIcon, LogOut,
   Coffee, ShoppingBag, PlusSquare, Tent, Search, Loader
 } from 'lucide-react';
 
-const GEOCODING_KEY = import.meta.env.VITE_GOOGLE_GEOCODING_API_KEY;
 const MAPS_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 const STADIUM_LAT = 18.9384;
 const STADIUM_LNG = 72.8253;
@@ -90,24 +89,6 @@ const INSIDE_LOCATIONS = [
   { group: 'Facilities', items: Object.values(VENUE_LOCATIONS).filter(v => ['food', 'restroom', 'aid', 'merch'].includes(v.type)).map(v => v.name) }
 ];
 
-// 15+ Hardcoded Routes inside the stadium
-const HARDCODED_ROUTES = {
-  'Gate A-Block A': { time: '~2 min walk', dist: '~120m', steps: ['Enter through Gate A security check.', 'Take the immediate stairs to Level 1.', 'Follow the blue concourse line to Block A entrances.'] },
-  'Gate B-Food Court North': { time: '~3 min walk', dist: '~180m', steps: ['Enter Gate B and turn left on the main concourse.', 'Walk past Block B and C.', 'Food Court North will be on your right beside the escalators.'] },
-  'Block D-Restroom Level 1': { time: '~1 min walk', dist: '~50m', steps: ['Exit Block D towards the rear stairs.', 'Descend to Level 1 concourse.', 'Restrooms are directly opposite stairwell 4.'] },
-  'Gate C-Medical Bay': { time: '~2 min walk', dist: '~100m', steps: ['Enter Gate C emergency bypass lane.', 'Head straight down the West corridor.', 'Medical Bay is the double red doors on the left.'] },
-  'Block H-Merchandise Store': { time: '~4 min walk', dist: '~250m', steps: ['Exit Block H to the upper concourse.', 'Take the escalator down to Ground Level.', 'Walk towards the main atrium.', 'The Store is next to Gate A.'] },
-  'Food Court South-Block F': { time: '~2 min walk', dist: '~90m', steps: ['Exit Food Court South and turn right.', 'Walk past the VIP elevators.', 'Take ramp up to Block F entrance.'] },
-  'Gate D-VIP Entrance': { time: '~1 min walk', dist: '~40m', steps: ['From Gate D, head to the dedicated fast-track lane.', 'The VIP Entrance is located in the adjacent glass pavilion.'] },
-  'Block B-Food Court South': { time: '~5 min walk', dist: '~300m', steps: ['Exit Block B and merge onto the circular concourse.', 'Walk clockwise passing Blocks C, D, and E.', 'Food Court South is located just after Block E.'] },
-  'Gate A-Press Box': { time: '~4 min walk', dist: '~200m', steps: ['Enter Gate A and locate the media elevator bank.', 'Take Elevator M to Level 4.', 'Follow signs for Press & Broadcasting.'] },
-  'Restroom Level 2-Block C': { time: '~2 min walk', dist: '~80m', steps: ['Exit Restroom Level 2.', 'Walk straight down the Level 2 concourse.', 'Enter Block C via portals 3 or 4.'] },
-  'Gate B-Restroom Level 1': { time: '~2 min walk', dist: '~110m', steps: ['Enter Gate B.', 'Turn right towards the East stairs.', 'Restrooms are located beneath the stairwell.'] },
-  'Block E-Gate C': { time: '~3 min walk', dist: '~150m', steps: ['Exit Block E downwards to the concourse.', 'Turn left and walk until you see the West Exits.', 'Proceed through Gate C turnstiles.'] },
-  'Food Court North-Medical Bay': { time: '~3 min walk', dist: '~180m', steps: ['Exit Food Court North towards the central hub.', 'Take the corridor towards Gate C.', 'Medical Bay is located halfway down on the right.'] },
-  'Merchandise Store-Block A': { time: '~1 min walk', dist: '~60m', steps: ['Exit the Store and turn left on the ground concourse.', 'Take the short ramp up to Level 1.', 'Block A portals are immediately ahead.'] },
-  'Gate A-Merchandise Store': { time: '< 1 min walk', dist: '~20m', steps: ['Enter Gate A main atrium.', 'The Merchandise Store is immediately to your right.'] },
-};
 
 // --- Custom searchable location picker ---
 function LocationPicker({ value, onChange, placeholder }) {
@@ -207,19 +188,7 @@ function LocationPicker({ value, onChange, placeholder }) {
 }
 
 
-import { useAuth } from '../contexts/AuthContext';
-
 export default function DirectionsScreen() {
-  const { user, logout } = useAuth();
-  const [profileOpen, setProfileOpen] = useState(false);
-  const profileRef = React.useRef(null);
-
-  // Close profile dropdown on outside click
-  useEffect(() => {
-    const handler = (e) => { if (profileRef.current && !profileRef.current.contains(e.target)) setProfileOpen(false); };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
 
   const location = useLocation();
   const locationState = location.state || {};
@@ -346,7 +315,7 @@ export default function DirectionsScreen() {
       } else {
         setLiveError('No route found specifically for driving to/from the stadium at this time.');
       }
-    } catch (err) {
+    } catch {
       setLiveError('Connectivity issue with Google Maps. Please check your network.');
     }
     setLiveLoading(false);
@@ -751,110 +720,6 @@ export default function DirectionsScreen() {
               </div>
             </div>
 
-            {/* Public Transit Dashboard */}
-            <div>
-              <h3 style={{ textTransform: 'uppercase', letterSpacing: '1px', color: '#94a3b8', fontSize: '0.75rem', marginBottom: '16px' }}>Transit Hub (Live Board)</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                
-                {/* Local Train Dashboard */}
-                <div style={{ 
-                  background: 'rgba(1, 4, 9, 0.6)', 
-                  border: '1px solid rgba(16, 185, 129, 0.2)', 
-                  borderRadius: '20px', 
-                  padding: '20px',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}>
-                  <div style={{ position: 'absolute', top: 0, right: 0, padding: '8px 12px', background: 'rgba(16, 185, 129, 0.1)', borderBottomLeftRadius: '12px', fontSize: '0.65rem', color: '#10B981', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', animation: 'pulse 1.5s infinite' }} /> LIVE UPDATES
-                  </div>
-                  
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-                    <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Train color="#10B981" size={22} />
-                    </div>
-                    <div>
-                      <h4 style={{ margin: 0, color: 'white', fontSize: '1.1rem' }}>Western Line Local</h4>
-                      <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.75rem' }}>Western Railway Section</p>
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    {[
-                      { station: 'Marine Lines', distance: '0.9km', time: 'In 4 mins', platform: 'P2', status: 'On Time', capacity: 'High' },
-                      { station: 'Churchgate', distance: '1.8km', time: 'In 9 mins', platform: 'P4', status: 'Exp. Delay', capacity: 'Normal' }
-                    ].map((train, i) => (
-                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px', background: 'rgba(255,255,255,0.03)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                        <div style={{ flex: 1 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={{ color: 'white', fontWeight: '700', fontSize: '0.95rem' }}>{train.station}</span>
-                            <span style={{ fontSize: '0.65rem', color: '#94a3b8', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>{train.distance}</span>
-                          </div>
-                          <div style={{ marginTop: '4px', fontSize: '0.72rem', color: train.status === 'On Time' ? '#10B981' : '#f59e0b', fontWeight: '600' }}>
-                            {train.status} • Platform {train.platform}
-                          </div>
-                        </div>
-                        <div style={{ textAlign: 'right' }}>
-                          <div style={{ color: '#10B981', fontWeight: '900', fontSize: '1.1rem' }}>{train.time}</div>
-                          <div style={{ fontSize: '0.6rem', color: '#94a3b8', textTransform: 'uppercase' }}>{train.capacity} LOAD</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <a href="https://maps.google.com/?q=Marine+Lines+Railway+Station" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '16px', textDecoration: 'none', background: 'rgba(16, 185, 129, 0.1)', color: '#10B981', padding: '12px', borderRadius: '12px', fontWeight: '700', fontSize: '0.85rem', transition: 'all 0.2s' }}>
-                    <MapPin size={14} /> View Station Access Maps
-                  </a>
-                </div>
-
-                {/* BEST Bus Monitor */}
-                <div style={{ 
-                  background: 'rgba(1, 4, 9, 0.6)', 
-                  border: '1px solid rgba(16, 185, 129, 0.2)', 
-                  borderRadius: '20px', 
-                  padding: '20px',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-                  position: 'relative'
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-                    <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Bus color="#10B981" size={22} />
-                    </div>
-                    <div>
-                      <h4 style={{ margin: 0, color: 'white', fontSize: '1.1rem' }}>BEST Bus Monitor</h4>
-                      <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.75rem' }}>Stadium Specialized Routes</p>
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                    {[
-                      { route: '132', time: 'Arriving', status: 'Blinking', next: '6m' },
-                      { route: '123', time: '3 mins', status: 'Ready', next: '12m' }
-                    ].map((bus, i) => (
-                      <div key={i} style={{ padding: '16px', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.06)', position: 'relative' }}>
-                        <div style={{ fontSize: '0.65rem', color: '#94a3b8', marginBottom: '4px' }}>ROUTE</div>
-                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '8px' }}>
-                          <span style={{ fontSize: '1.4rem', fontWeight: '900', color: 'white' }}>{bus.route}</span>
-                          <span style={{ fontSize: '0.65rem', color: '#10B981', fontWeight: 'bold' }}>LTD</span>
-                        </div>
-                        <div style={{ fontSize: '0.9rem', fontWeight: '800', color: bus.status === 'Blinking' ? '#10B981' : '#34D399', animation: bus.status === 'Blinking' ? 'pulse 1s infinite' : 'none' }}>
-                          {bus.time}
-                        </div>
-                        <div style={{ marginTop: '12px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.05)', fontSize: '0.65rem', color: '#64748b' }}>
-                          NEXT: {bus.next}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div style={{ marginTop: '16px', padding: '10px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: '12px', fontSize: '0.72rem', color: '#fbbf24', display: 'flex', gap: '8px' }}>
-                    <AlertTriangle size={14} style={{ flexShrink: 0 }} />
-                    Post-match traffic may divert Route 132. Check app for live detour maps.
-                  </div>
-                </div>
-
-              </div>
-            </div>
 
             {/* Parking Info */}
             <div>

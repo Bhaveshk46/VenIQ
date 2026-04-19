@@ -1,3 +1,4 @@
+/* global process */
 /**
  * VenIQ — Live Crowd Simulation Backend Worker
  * Run with: npm run backend
