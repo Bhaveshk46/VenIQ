@@ -21,7 +21,7 @@ ENV VITE_FIREBASE_PROJECT_ID=$VITE_FIREBASE_PROJECT_ID
 
 # Copy the simulation worker and necessary utils
 COPY simulation-worker.js ./
-COPY utils/ ./utils/
+COPY src/utils/ ./utils/
 
 # Manually create .env for the worker script to consume
 RUN echo "VITE_GEMINI_API_KEY=$VITE_GEMINI_API_KEY" > .env && \
