@@ -1,5 +1,5 @@
 import React from 'react';
-import { VENUE_LOCATIONS } from '../../utils/directions';
+import { VENUE_LOCATIONS } from '../utils/directions';
 import {
   STADIUM_MAP_IMAGE,
   STADIUM_MAP_EDGE_MASK,

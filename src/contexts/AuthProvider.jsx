@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { auth, onAuthStateChanged, signOut, bootstrapAuthSession, isMobileUserAgent } from '../../services/firebase';
+import { auth, onAuthStateChanged, signOut, bootstrapAuthSession, isMobileUserAgent } from '../services/firebase';
 import { AuthContext } from './AuthContext';
 
 export function AuthProvider({ children }) {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { auth, googleProvider, signInWithPopup, signInWithRedirect, isFirebaseReady } from '../../services/firebase';
+import { auth, googleProvider, signInWithPopup, signInWithRedirect, isFirebaseReady } from '../services/firebase';
 import VenIQLogo from '../components/VenIQLogo';
 import { useAuth } from '../hooks/useAuth';
 

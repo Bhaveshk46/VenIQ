@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, Sparkles, Zap, MapPin, User as UserIcon, LogOut } from 'lucide-react';
-import { getGeminiResponse } from '../../services/gemini';
+import { getGeminiResponse } from '../services/gemini';
 import { useStadium } from '../hooks/useStadium';
 import { useAuth } from '../hooks/useAuth';
 import { MAX_CHAT_INPUT_LENGTH } from '../utils/constants';

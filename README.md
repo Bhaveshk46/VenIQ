@@ -58,7 +58,7 @@ graph TD
 ## 🧐 Evaluation Focus Areas
 
 ### 💎 Code Quality
-- **Modular Architecture**: Separate directories for `services/` (Firebase, Gemini), `contexts/` (Auth, Stadium State), and `hooks/` for a clean separation of concerns.
+- **Modular Architecture**: Separate directories for `src/services/` (Firebase, Gemini), `src/contexts/` (Auth, Stadium State), and `src/hooks/` for a clean separation of concerns.
 - **Clean Patterns**: Zero lint errors (`npm run lint`), use of Custom Hooks, and a robust Context API structure optimized for React Fast Refresh.
 
 ### 🛡️ Security

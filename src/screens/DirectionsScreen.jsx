@@ -80,7 +80,7 @@ async function geocodeArea(area) {
 }
 
 
-import { VENUE_LOCATIONS } from '../../utils/directions';
+import { VENUE_LOCATIONS } from '../utils/directions';
 import StadiumLayoutHint from '../components/StadiumLayoutHint';
 
 const INSIDE_LOCATIONS = [
@@ -210,7 +210,7 @@ export default function DirectionsScreen() {
     setAiLoading(true);
     setAiRoute(null);
     setShowRoute(false);
-    import('../../services/gemini').then(({ getGeminiDirections }) => {
+    import('../services/gemini').then(({ getGeminiDirections }) => {
       getGeminiDirections(fromLoc, toLoc).then(r => {
         if (active) {
           if (r) setAiRoute(r);

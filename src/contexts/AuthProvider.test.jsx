@@ -3,10 +3,10 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { AuthProvider } from './AuthProvider';
 import { useAuth } from '../hooks/useAuth';
-import * as firebaseService from '../../services/firebase';
+import * as firebaseService from '../services/firebase';
 
 // Mock the firebase service
-vi.mock('../../services/firebase', () => ({
+vi.mock('../services/firebase', () => ({
   auth: {},
   onAuthStateChanged: vi.fn(),
   signOut: vi.fn(),

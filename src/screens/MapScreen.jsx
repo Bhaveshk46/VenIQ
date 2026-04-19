@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef, useMemo, useCallback, memo } from '
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ChevronDown, User as UserIcon, LogOut } from 'lucide-react';
 import { onValue } from 'firebase/database';
-import { crowdLevelsRef, matchRef } from '../../services/firebase';
-import { VENUE_LOCATIONS } from '../../utils/directions';
+import { crowdLevelsRef, matchRef } from '../services/firebase';
+import { VENUE_LOCATIONS } from '../utils/directions';
 import {
   STADIUM_MAP_EDGE_MASK,
   STADIUM_MAP_ASPECT_BOX,

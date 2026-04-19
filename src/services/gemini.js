@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { STADIUM_LORE } from "../src/utils/constants";
+import { STADIUM_LORE } from "../utils/constants";
 import { VENUE_LOCATIONS } from "../utils/directions";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env._VITE_GEMINI_API_KEY;

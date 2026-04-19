@@ -4,7 +4,7 @@
  * Run with: npm test
  */
 import { describe, it, expect } from 'vitest';
-import { VENUE_LOCATIONS, STADIUM_SECTIONS, getWalkingInstructions } from '../../utils/directions';
+import { VENUE_LOCATIONS, STADIUM_SECTIONS, getWalkingInstructions } from './directions';
 import { NORTH_SHOPS, SOUTH_SHOPS, SEATING_GROUPS, MAX_CHAT_INPUT_LENGTH } from './constants';
 
 // --- VENUE_LOCATIONS Integrity Tests ---
